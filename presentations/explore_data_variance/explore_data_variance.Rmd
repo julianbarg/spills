@@ -1,0 +1,104 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.1'
+      jupytext_version: 1.2.1
+  kernelspec:
+    display_name: R 3.6.1
+    language: R
+    name: ir361
+---
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+# Explore data variance
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Setup
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+sample_file <- "sample_combined_2019-09-16.feather"
+```
+
+```{r}
+library(DataAnalysisTools)
+library(tidyverse)
+library(oildata)
+```
+
+```{r}
+set.seed(6)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Load data
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+sample <- feather::read_feather(sample_file)
+sample_n(sample, 5)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+data(pipelines_2010)
+sample_n(pipelines_2010, 5)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Add missing names
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+sample$Name <- oildata::add_company_names(sample$OPERATOR_ID)
+head(sample)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Grab largest companies
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Largest operators by total miles
+<!-- #endregion -->
+
+```{r}
+largest_companies <- sample %>%
+    group_by(Name) %>%
+    filter(TOTAL_MILES == max(TOTAL_MILES)) %>%
+    ungroup() %>%
+    mutate(Name = fct_reorder(Name, TOTAL_MILES)) %>%
+    arrange(desc(TOTAL_MILES)) %>%
+    select(Name, TOTAL_MILES)
+
+head(largest_companies) %>%
+    jupyter_styling(font_size = 16)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+largest_companies %>%
+    top_n(50, TOTAL_MILES) %>%
+    ggplot(aes(x = TOTAL_MILES, y = Name)) +
+        geom_point()
+```
+
+## Information from the dataset
+
+
+### Product mix - pipelines types
+
+<!-- #region {"slideshow": {"slide_type": "skip"}} -->
+### Save slides*
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "skip"}} -->
+* Run after saving!
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'skip'}}
+system("jupyter nbconvert explore_data_variance.ipynb --to slides")
+```
