@@ -59,6 +59,27 @@ head(sample)
 ```
 
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Data consistency
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+head(pipelines)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+options(repr.plot.width=7, repr.plot.height=4)
+pipelines %>%
+    select(-c(ID, name, hca_offshore, total_offshore)) %>%
+    filter(!(commodity %in% c("CO2 OR OTHER", "CO2", "FGE"))) %>%
+    pivot_longer(-c(year, commodity), names_to = "variable", values_to = "miles") %>%
+    group_by(year, commodity, variable) %>%
+    summarize(miles = sum(miles, na.rm = TRUE)) %>%
+    ggplot(aes(x=year, y=miles, color=commodity)) +
+        facet_wrap(variable ~ .) +
+        geom_line()
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
 ## Grab largest companies
 <!-- #endregion -->
 
@@ -80,8 +101,9 @@ head(largest_companies) %>%
 ```
 
 ```{r slideshow={'slide_type': 'subslide'}}
+options(repr.plot.width=7, repr.plot.height=4.5)
 largest_companies %>%
-    top_n(50, TOTAL_MILES) %>%
+    top_n(35, TOTAL_MILES) %>%
     ggplot(aes(x = TOTAL_MILES, y = Name)) +
         geom_point()
 ```
@@ -90,6 +112,13 @@ largest_companies %>%
 
 
 ### Product mix - pipelines types
+
+```{r}
+# sample %>%
+#     filter(Name %in% top_n(largest_companies, 6, TOTAL_MILES)$Name) %>%
+#     group_by(Name, YEAR) %>%
+#     summarize(perc_crude = )
+```
 
 <!-- #region {"slideshow": {"slide_type": "skip"}} -->
 ### Save slides*
