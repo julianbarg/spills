@@ -212,7 +212,9 @@ sample_n(largest, 5)
 Midstream company: selling to other companies
 <!-- #endregion -->
 
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
 <img src="https://www.enterpriseproducts.com/images/about_us_system_map/completeMap.png">
+<!-- #endregion -->
 
 <!-- #region {"slideshow": {"slide_type": "subslide"}} -->
 ### ONEOK
@@ -288,15 +290,19 @@ product_mix <- largest %>%
     pivot_wider(names_from = commodity, values_from = total_miles, id_cols = c(year, ID)) %>%
     select(year, ID, `non-HVL`, Crude, HVL) %>%
     group_by(year, ID) %>%
-    summarize(`non-HVL` = sum(`non-HVL`, na.rm = T), Crude = sum(Crude, na.rm = T), HVL = sum(HVL, na.rm = T)) %>%
+    summarize(`non-HVL` = sum(`non-HVL`, na.rm = T), 
+              Crude = sum(Crude, na.rm = T), 
+              HVL = sum(HVL, na.rm = T)) %>%
     ungroup() %>%
     mutate(total = `non-HVL` + Crude + HVL) %>%
-    mutate(`perc_non-HVL` = `non-HVL` / total, perc_crude = Crude / total, perc_HVL = HVL / total) %>%
+    mutate(`perc_non-HVL` = `non-HVL` / total, 
+           perc_crude = Crude / total, 
+           perc_HVL = HVL / total) %>%
     mutate(name = oildata::add_company_names(ID))
 sample_n(product_mix, 5)
 ```
 
-```{r}
+```{r slideshow={'slide_type': 'subslide'}}
 product_mix_plot <- product_mix %>%
     pivot_longer(starts_with("perc"), names_to = "commodity") %>%
     ggplot(aes(x = year, y = value, color = commodity)) +
@@ -318,6 +324,26 @@ construction <- largest %>%
 
 ```{r slideshow={'slide_type': 'subslide'}}
 print(construction)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Pipeline age
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Incident trends
+<!-- #endregion -->
+
+```{r}
+incident_counts <- sample %>%
+    filter(Name %in% largest$name) %>%
+    ggplot(aes(x=YEAR, y=SIGNIFICANT_INCIDENTS)) + 
+        facet_wrap(~ Name) +
+        geom_col()
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+print(incident_counts)
 ```
 
 <!-- #region {"slideshow": {"slide_type": "skip"}} -->
