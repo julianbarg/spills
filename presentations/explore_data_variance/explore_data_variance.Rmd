@@ -35,6 +35,10 @@ library(oildata)
 set.seed(6)
 ```
 
+```{r}
+options(repr.plot.width=7, repr.plot.height=5.5)
+```
+
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
 ## Load data
 <!-- #endregion -->
@@ -44,9 +48,9 @@ sample <- feather::read_feather(sample_file)
 sample_n(sample, 5)
 ```
 
-```{r slideshow={'slide_type': 'subslide'}}
-data(pipelines_2010)
-sample_n(pipelines_2010, 5)
+```{r}
+pipelines <- oildata::pipelines
+sample_n(pipelines, 5)
 ```
 
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
@@ -59,16 +63,69 @@ head(sample)
 ```
 
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Dataset overview
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### 1 - Pipelines raw datasets
+<!-- #endregion -->
+
+* Different reporting rules (and datasets) for different periods of time.
+* Companies file separate reports for separate commodities being transported.
+* For historical reasons, some companies file separate reports for separate parts of the company, sometimes under the same ID, sometimes under separate IDs.
+* Many things are inconsistent between datasets (e.g., commodities, variable names).
+
+```{r slideshow={'slide_type': 'notes'}}
+sample_n(pipelines_2010, 5)
+```
+
+```{r}
+sample_n(pipelines_2004, 5)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### 2 - Company groups and M&As
+<!-- #endregion -->
+
+* I looked up all M&As and ownership on LexisNexis.
+* Requires manual definition of aggregation rules.
+* Aggregation takes place twice just for data on pipeline network: within companies, and for company groupings.
+* In addition, might need to aggregate between commodities.
+
+```{r}
+sample_n(m_as, 5)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### 3 - Pipeline incidents
+<!-- #endregion -->
+
+* Pipeline incidents are reported in a separate dataset.
+* Each incident is a separate observation in that dataset.
+* Obviously, aggregation is required again to obtain the number of incident per organization/commodity/year.
+
+```{r}
+sample_n(select(incidents_2010, -narrative), 5)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+Rich data, e.g.:
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+sample_n(incidents_2010, 1)$narrative
+```
+
+```{r}
+sample_n(incidents_2010, 1)$narrative
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
 ## Data consistency
 <!-- #endregion -->
 
 ```{r slideshow={'slide_type': 'subslide'}}
-head(pipelines)
-```
-
-```{r slideshow={'slide_type': 'subslide'}}
-options(repr.plot.width=7, repr.plot.height=4)
-pipelines %>%
+data_consistency <- pipelines %>%
     select(-c(ID, name, hca_offshore, total_offshore)) %>%
     filter(!(commodity %in% c("CO2 OR OTHER", "CO2", "FGE"))) %>%
     pivot_longer(-c(year, commodity), names_to = "variable", values_to = "miles") %>%
@@ -77,6 +134,10 @@ pipelines %>%
     ggplot(aes(x=year, y=miles, color=commodity)) +
         facet_wrap(variable ~ .) +
         geom_line()
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+print(data_consistency)
 ```
 
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
@@ -94,30 +155,169 @@ largest_companies <- sample %>%
     ungroup() %>%
     mutate(Name = fct_reorder(Name, TOTAL_MILES)) %>%
     arrange(desc(TOTAL_MILES)) %>%
-    select(Name, TOTAL_MILES)
+    select(Name, TOTAL_MILES, OPERATOR_ID)
 
 head(largest_companies) %>%
     jupyter_styling(font_size = 16)
 ```
 
-```{r slideshow={'slide_type': 'subslide'}}
-options(repr.plot.width=7, repr.plot.height=4.5)
-largest_companies %>%
+```{r}
+largest_companies_plot <- largest_companies %>%
     top_n(35, TOTAL_MILES) %>%
     ggplot(aes(x = TOTAL_MILES, y = Name)) +
         geom_point()
 ```
 
-## Information from the dataset
+```{r slideshow={'slide_type': 'subslide'}}
+print(largest_companies_plot)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+largest <- top_n(largest_companies, 6, TOTAL_MILES) %>%
+    left_join(pipelines, by = c("OPERATOR_ID" = "ID")) %>%
+    rename(ID = OPERATOR_ID) %>%
+    select(-Name, name) %>%
+    mutate(name = oildata::add_company_names(ID))
+sample_n(largest, 5)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Qualitative
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+## Industry-wide trends
+
+* Good short-term outlook.
+* Mid-term: threat of regulations.
+* Money being pulled out of many businesses.
+* No initiatives to diversify.
+* The top 3 companies listed below are not in direct competition (different sub-industries).
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Enterprise Products Operating
+
+* Fortune # 105 (2018).
+* Family-owned, publicly traded company (Duncan family).
+* Dan Duncan founded EPO in 1968 and was CEO until 2010.
+* Current CEO: Randas Duncan WIlliams.
+* Wikipedia highlights several explosions 2011-2017.
+* Natural gas midstream company (HVL)
+* In addition to pipelines, owns storage facilities, 24 natural gas processing platns, six offshore hub platforms, etc.
+* States primaru focus on shale gas in company statement.
+
+----
+
+Midstream company: selling to other companies
+<!-- #endregion -->
+
+<img src="https://www.enterpriseproducts.com/images/about_us_system_map/completeMap.png">
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### ONEOK
+
+* Natural gas utility.
+* Forbes #630 (2019).
+* Aqcuired NGL systems from Koch Industries in 2005.
+* Spun out distribution business (consumer business unit) in 2014) - still under ONEOK ownership (?).
 
 
-### Product mix - pipelines types
+----
+
+Utility company*: selling to consumers
+
+\* Also owns some midstream assets
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+<img src="ONEOK_network_2019-12-09.png">
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+subset(m_as, group_name == "ONEOK (Group)") %>%
+    mutate(name = oildata::add_company_names(members, pipelines_2004))
+```
 
 ```{r}
-# sample %>%
-#     filter(Name %in% top_n(largest_companies, 6, TOTAL_MILES)$Name) %>%
-#     group_by(Name, YEAR) %>%
-#     summarize(perc_crude = )
+ONEOK_construction <- pipelines %>%
+    filter(ID == "ONEOK (Group)") %>%
+    ggplot(aes(x=year, y=total_miles, color=commodity)) +
+        geom_line()
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+print(ONEOK_construction)
+```
+
+Acquisition probably does not show up because it was acquired as a whole.
+
+```{r slideshow={'slide_type': 'subslide'}}
+pipelines_2004 %>%
+    filter(ID %in% c(32109, 30629)) %>%
+    select(ID, year, name) %>%
+    jupyter_styling(font_size = 16)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Phillips 66
+
+* Spun off by ConocoPhillip in 2012.
+* Forbes #23 (2018).
+* Phllips: America-based, internationally active company (e.g., extraction in North Sea).
+* Phillips (predecessor) experienced high-profile incidents in 1980, 1989, and 1999.
+* Apart from midstream activities, also engages in chemicals, refining, and marketing (gas stations).
+----
+Downstream and midstream, diversified
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+<img src="phillips_66_network_2019-12-09.png">
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Information from the dataset
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Product mix - pipelines types
+<!-- #endregion -->
+
+```{r}
+product_mix <- largest %>%
+    pivot_wider(names_from = commodity, values_from = total_miles, id_cols = c(year, ID)) %>%
+    select(year, ID, `non-HVL`, Crude, HVL) %>%
+    group_by(year, ID) %>%
+    summarize(`non-HVL` = sum(`non-HVL`, na.rm = T), Crude = sum(Crude, na.rm = T), HVL = sum(HVL, na.rm = T)) %>%
+    ungroup() %>%
+    mutate(total = `non-HVL` + Crude + HVL) %>%
+    mutate(`perc_non-HVL` = `non-HVL` / total, perc_crude = Crude / total, perc_HVL = HVL / total) %>%
+    mutate(name = oildata::add_company_names(ID))
+sample_n(product_mix, 5)
+```
+
+```{r}
+product_mix_plot <- product_mix %>%
+    pivot_longer(starts_with("perc"), names_to = "commodity") %>%
+    ggplot(aes(x = year, y = value, color = commodity)) +
+        facet_wrap(~name) +
+        geom_line()
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+print(product_mix_plot)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+construction <- largest %>%
+    filter(commodity %in% c("Crude", "HVL", "non-HVL")) %>%
+    ggplot(aes(x=year, y=total_miles, color=commodity)) +
+        facet_wrap(~name) +
+        geom_line()
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+print(construction)
 ```
 
 <!-- #region {"slideshow": {"slide_type": "skip"}} -->
