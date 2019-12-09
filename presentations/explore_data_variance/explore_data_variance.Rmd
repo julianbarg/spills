@@ -39,7 +39,7 @@ set.seed(6)
 options(repr.plot.width=7, repr.plot.height=5.5)
 ```
 
-<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
 ## Load data
 <!-- #endregion -->
 
@@ -53,7 +53,7 @@ pipelines <- oildata::pipelines
 sample_n(pipelines, 5)
 ```
 
-<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
 ## Add missing names
 <!-- #endregion -->
 
