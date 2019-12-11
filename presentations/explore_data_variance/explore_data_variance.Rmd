@@ -355,7 +355,7 @@ largest_4 <- top_n(largest_companies, 4, TOTAL_MILES)
 largest_4
 ```
 
-```{r slideshow={'slide_type': 'subslide'}, jupyter={'source_hidden': True}}
+```{r slideshow={'slide_type': 'subslide'}}
 miles <- pipelines %>%
     filter(ID == 31618) %>%
     mutate(ID = "Enterprise Products Operating") %>%
@@ -375,7 +375,7 @@ incidents <- pipelines %>%
     mutate(ID = "Enterprise Products Operating") %>%
     ggplot(aes(x=year, y=significant_incidents)) +
         facet_wrap(~ commodity) +
-        geom_line() +
+        geom_col() +
         geom_smooth(method = "lm", se = FALSE) +
         theme(axis.title.x = element_blank(),
               axis.text.x=element_blank(), 
@@ -401,7 +401,7 @@ incidents_smooth <- pipelines %>%
     mutate(ID = "Enterprise Products Operating") %>%
     ggplot(aes(x=year, y=significant_incidents)) +
         facet_wrap(~ commodity) +
-        geom_line() +
+        geom_col() +
         geom_smooth(method = "loess", se = FALSE) +
         theme(axis.title.x = element_blank(),
               axis.text.x=element_blank(), 
@@ -431,7 +431,7 @@ incidents <- pipelines %>%
     filter(ID == "ONEOK (Group)") %>%
     ggplot(aes(x=year, y=significant_incidents)) +
         facet_wrap(~ commodity) +
-        geom_line() +
+        geom_col() +
         geom_smooth(method = "lm", se = FALSE) +
         theme(axis.title.x = element_blank(),
               axis.text.x=element_blank(), 
@@ -454,7 +454,7 @@ incidents_smooth <- pipelines %>%
     filter(ID == "ONEOK (Group)") %>%
     ggplot(aes(x=year, y=significant_incidents)) +
         facet_wrap(~ commodity) +
-        geom_line() +
+        geom_col() +
         geom_smooth(method = "loess", se = FALSE) +
         theme(axis.title.x = element_blank(),
               axis.text.x=element_blank(), 
@@ -466,7 +466,7 @@ incidents_smooth <- pipelines %>%
 grid.arrange(miles, incidents, miles_smooth, incidents_smooth, ncol = 1)
 ```
 
-```{r jupyter={'source_hidden': True}, slideshow={'slide_type': 'skip'}}
+```{r slideshow={'slide_type': 'skip'}, jupyter={'source_hidden': True}}
 miles <- pipelines %>%
     filter(ID == "Phillips 66 (Group)") %>%
     ggplot(aes(x=year, y=total_miles)) +
@@ -484,7 +484,7 @@ incidents <- pipelines %>%
     filter(ID == "Phillips 66 (Group)") %>%
     ggplot(aes(x=year, y=significant_incidents)) +
         facet_wrap(~ commodity) +
-        geom_line() +
+        geom_col() +
         geom_smooth(method = "lm", se = FALSE) +
         theme(axis.title.x = element_blank(),
               axis.text.x=element_blank(), 
@@ -507,6 +507,92 @@ incidents_smooth <- pipelines %>%
     filter(ID == "Phillips 66 (Group)") %>%
     ggplot(aes(x=year, y=significant_incidents)) +
         facet_wrap(~ commodity) +
+        geom_col() +
+        geom_smooth(method = "loess", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+grid.arrange(miles, incidents, miles_smooth, incidents_smooth, ncol = 1)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+### Incidents per mile
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+incidents_per_mile <- oildata::pipelines %>%
+    mutate(name = oildata::add_company_names(ID)) %>%
+    filter(name %in% largest$name) %>%
+    group_by(year, name) %>%
+    summarize(incidents_per_mile = sum(significant_incidents, na.rm = T) / sum(total_miles, na.rm = T), 
+              total_miles = sum(total_miles, na.rm = T))
+```
+
+```{r}
+incidents_per_mile_graphed <- incidents_per_mile %>%
+    ggplot(aes(x=year, y=incidents_per_mile)) + 
+        facet_wrap(~ name) +
+        geom_col()
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+print(incidents_per_mile_graphed)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+incidents_per_mile2 <- oildata::pipelines %>%
+    mutate(name = oildata::add_company_names(ID)) %>%
+    filter(name %in% largest$name) %>%
+    group_by(year, name, commodity) %>%
+    summarize(incidents_per_mile = sum(significant_incidents, na.rm = T) / sum(total_miles, na.rm = T), 
+              total_miles = sum(total_miles, na.rm = T))
+```
+
+```{r}
+miles <- incidents_per_mile2 %>%
+    filter(name == "Enterprise Products Operating") %>%
+    ggplot(aes(x=year, y=total_miles)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "lm", se = FALSE) +
+        labs(title = "Enterprise Products Operating") +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.title = element_text(size=10),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+incidents <- incidents_per_mile2 %>%
+    filter(name == "Enterprise Products Operating") %>%
+    ggplot(aes(x=year, y=incidents_per_mile)) +
+        facet_wrap(~ commodity, scale = "free") +
+        geom_line() +
+        geom_smooth(method = "lm", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+miles_smooth <- incidents_per_mile2 %>%
+    filter(name == "Enterprise Products Operating") %>%
+    ggplot(aes(x=year, y=total_miles)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "loess", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.title = element_text(size=10),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+incidents_smooth <- incidents_per_mile2 %>%
+    filter(name == "Enterprise Products Operating") %>%
+    ggplot(aes(x=year, y=incidents_per_mile)) +
+        facet_wrap(~ commodity, scale = "free") +
         geom_line() +
         geom_smooth(method = "loess", se = FALSE) +
         theme(axis.title.x = element_blank(),
@@ -519,6 +605,116 @@ incidents_smooth <- pipelines %>%
 grid.arrange(miles, incidents, miles_smooth, incidents_smooth, ncol = 1)
 ```
 
+```{r slideshow={'slide_type': 'skip'}, jupyter={'source_hidden': True}}
+miles <- incidents_per_mile2 %>%
+    filter(name == "ONEOK (Group)") %>%
+    ggplot(aes(x=year, y=total_miles)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "lm", se = FALSE) +
+        labs(title = "ONEOK (Group)") +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.title = element_text(size=10),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+incidents <- incidents_per_mile2 %>%
+    filter(name == "ONEOK (Group)") %>%
+    ggplot(aes(x=year, y=incidents_per_mile)) +
+        facet_wrap(~ commodity, scale = "free") +
+        geom_line() +
+        geom_smooth(method = "lm", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+miles_smooth <- incidents_per_mile2 %>%
+    filter(name == "ONEOK (Group)") %>%
+    ggplot(aes(x=year, y=total_miles)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "loess", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.title = element_text(size=10),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+incidents_smooth <- incidents_per_mile2 %>%
+    filter(name == "ONEOK (Group)") %>%
+    ggplot(aes(x=year, y=incidents_per_mile)) +
+        facet_wrap(~ commodity, scale = "free") +
+        geom_line() +
+        geom_smooth(method = "loess", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+grid.arrange(miles, incidents, miles_smooth, incidents_smooth, ncol = 1)
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+miles <- incidents_per_mile2 %>%
+    filter(name == "Phillips 66 (Group)") %>%
+    ggplot(aes(x=year, y=total_miles)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "lm", se = FALSE) +
+        labs(title = "Phillips 66 (Group)") +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.title = element_text(size=10),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+incidents <- incidents_per_mile2 %>%
+    filter(name == "Phillips 66 (Group)") %>%
+    ggplot(aes(x=year, y=incidents_per_mile)) +
+        facet_wrap(~ commodity, scale = "free") +
+        geom_line() +
+        geom_smooth(method = "lm", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+miles_smooth <- incidents_per_mile2 %>%
+    filter(name == "Phillips 66 (Group)") %>%
+    ggplot(aes(x=year, y=total_miles)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "loess", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.title = element_text(size=10),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+incidents_smooth <- incidents_per_mile2 %>%
+    filter(name == "Phillips 66 (Group)") %>%
+    ggplot(aes(x=year, y=incidents_per_mile)) +
+        facet_wrap(~ commodity, scale = "free") +
+        geom_line() +
+        geom_smooth(method = "loess", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+grid.arrange(miles, incidents, miles_smooth, incidents_smooth, ncol = 1)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Other variables
+<!-- #endregion -->
+
 <!-- #region {"slideshow": {"slide_type": "subslide"}} -->
 ### Pipeline age
 <!-- #endregion -->
@@ -526,6 +722,15 @@ grid.arrange(miles, incidents, miles_smooth, incidents_smooth, ncol = 1)
 ```{r}
 sample_n(sample, 5)
 ```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Other variables
+* Inspections, actions taken
+* Nominal pipe size, weld
+* Minimum yield strength
+* Corosion prevention status
+* HCAs
+<!-- #endregion -->
 
 <!-- #region {"slideshow": {"slide_type": "skip"}} -->
 ### Save slides*
