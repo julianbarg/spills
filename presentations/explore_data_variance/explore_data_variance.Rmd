@@ -17,6 +17,8 @@ jupyter:
 # Explore data variance
 <!-- #endregion -->
 
+<img src="https://i.guim.co.uk/img/media/6e63e829df2d58d73253ad09e0f4963087feb236/0_123_4500_2700/master/4500.jpg?width=3250&quality=85&auto=format&fit=max&s=3e168537ca9c10ff418f5265aba86f56">
+
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
 ## Setup
 <!-- #endregion -->
@@ -29,6 +31,7 @@ sample_file <- "sample_combined_2019-09-16.feather"
 library(DataAnalysisTools)
 library(tidyverse)
 library(oildata)
+library(gridExtra)
 ```
 
 ```{r}
@@ -126,8 +129,8 @@ sample_n(incidents_2010, 1)$narrative
 
 ```{r slideshow={'slide_type': 'subslide'}}
 data_consistency <- pipelines %>%
-    select(-c(ID, name, hca_offshore, total_offshore)) %>%
-    filter(!(commodity %in% c("CO2 OR OTHER", "CO2", "FGE"))) %>%
+    filter(!(commodity %in% c("CO2 OR OTHER", "CO2", "fge"))) %>%
+    select(hca_onshore, hca_total, total_onshore, total_miles, year, commodity) %>%
     pivot_longer(-c(year, commodity), names_to = "variable", values_to = "miles") %>%
     group_by(year, commodity, variable) %>%
     summarize(miles = sum(miles, na.rm = TRUE)) %>%
@@ -288,16 +291,16 @@ Downstream and midstream, diversified
 ```{r}
 product_mix <- largest %>%
     pivot_wider(names_from = commodity, values_from = total_miles, id_cols = c(year, ID)) %>%
-    select(year, ID, `non-HVL`, Crude, HVL) %>%
+    select(year, ID, non_hvl, crude, hvl) %>%
     group_by(year, ID) %>%
-    summarize(`non-HVL` = sum(`non-HVL`, na.rm = T), 
-              Crude = sum(Crude, na.rm = T), 
-              HVL = sum(HVL, na.rm = T)) %>%
+    summarize(non_hvl = sum(non_hvl, na.rm = T), 
+              crude = sum(crude, na.rm = T), 
+              hvl = sum(hvl, na.rm = T)) %>%
     ungroup() %>%
-    mutate(total = `non-HVL` + Crude + HVL) %>%
-    mutate(`perc_non-HVL` = `non-HVL` / total, 
-           perc_crude = Crude / total, 
-           perc_HVL = HVL / total) %>%
+    mutate(total = non_hvl + crude + hvl) %>%
+    mutate(perc_non_hvl = non_hvl / total, 
+           perc_crude = crude / total, 
+           perc_hvl = hvl / total) %>%
     mutate(name = oildata::add_company_names(ID))
 sample_n(product_mix, 5)
 ```
@@ -316,7 +319,7 @@ print(product_mix_plot)
 
 ```{r slideshow={'slide_type': 'subslide'}}
 construction <- largest %>%
-    filter(commodity %in% c("Crude", "HVL", "non-HVL")) %>%
+    filter(commodity %in% c("crude", "hvl", "non_hvl")) %>%
     ggplot(aes(x=year, y=total_miles, color=commodity)) +
         facet_wrap(~name) +
         geom_line()
@@ -327,23 +330,201 @@ print(construction)
 ```
 
 <!-- #region {"slideshow": {"slide_type": "subslide"}} -->
-### Pipeline age
-<!-- #endregion -->
-
-<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
 ### Incident trends
 <!-- #endregion -->
 
 ```{r}
-incident_counts <- sample %>%
-    filter(Name %in% largest$name) %>%
-    ggplot(aes(x=YEAR, y=SIGNIFICANT_INCIDENTS)) + 
-        facet_wrap(~ Name) +
+incident_counts <- pipelines %>%
+    mutate(name = oildata::add_company_names(ID)) %>%
+    filter(name %in% largest$name) %>%
+    ggplot(aes(x=year, y=significant_incidents)) + 
+        facet_wrap(~ name) +
         geom_col()
 ```
 
 ```{r slideshow={'slide_type': 'subslide'}}
 print(incident_counts)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Relationships
+<!-- #endregion -->
+
+```{r}
+largest_4 <- top_n(largest_companies, 4, TOTAL_MILES)
+largest_4
+```
+
+```{r slideshow={'slide_type': 'subslide'}, jupyter={'source_hidden': True}}
+miles <- pipelines %>%
+    filter(ID == 31618) %>%
+    mutate(ID = "Enterprise Products Operating") %>%
+    ggplot(aes(x=year, y=total_miles)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "lm", se = FALSE) +
+        labs(title = "Enterprise Products Operating") +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.title = element_text(size=10),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+incidents <- pipelines %>%
+    filter(ID == 31618) %>%
+    mutate(ID = "Enterprise Products Operating") %>%
+    ggplot(aes(x=year, y=significant_incidents)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "lm", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+miles_smooth <- pipelines %>%
+    filter(ID == 31618) %>%
+    mutate(ID = "Enterprise Products Operating") %>%
+    ggplot(aes(x=year, y=total_miles)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "loess", se = FALSE) +
+        labs(title = "Enterprise Products Operating") +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.title = element_text(size=10),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+incidents_smooth <- pipelines %>%
+    filter(ID == 31618) %>%
+    mutate(ID = "Enterprise Products Operating") %>%
+    ggplot(aes(x=year, y=significant_incidents)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "loess", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+grid.arrange(miles, incidents, miles_smooth, incidents_smooth, ncol = 1)
+```
+
+```{r slideshow={'slide_type': 'skip'}, jupyter={'source_hidden': True}}
+miles <- pipelines %>%
+    filter(ID == "ONEOK (Group)") %>%
+    ggplot(aes(x=year, y=total_miles)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "lm", se = FALSE) +
+        labs(title = "ONEOK (Group)") +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.title = element_text(size=10),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+incidents <- pipelines %>%
+    filter(ID == "ONEOK (Group)") %>%
+    ggplot(aes(x=year, y=significant_incidents)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "lm", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+miles_smooth <- pipelines %>%
+    filter(ID == "ONEOK (Group)") %>%
+    ggplot(aes(x=year, y=total_miles)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "loess", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.title = element_text(size=10),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+incidents_smooth <- pipelines %>%
+    filter(ID == "ONEOK (Group)") %>%
+    ggplot(aes(x=year, y=significant_incidents)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "loess", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+grid.arrange(miles, incidents, miles_smooth, incidents_smooth, ncol = 1)
+```
+
+```{r jupyter={'source_hidden': True}, slideshow={'slide_type': 'skip'}}
+miles <- pipelines %>%
+    filter(ID == "Phillips 66 (Group)") %>%
+    ggplot(aes(x=year, y=total_miles)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "lm", se = FALSE) +
+        labs(title = "Phillips 66 (Group)") +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.title = element_text(size=10),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+incidents <- pipelines %>%
+    filter(ID == "Phillips 66 (Group)") %>%
+    ggplot(aes(x=year, y=significant_incidents)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "lm", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+miles_smooth <- pipelines %>%
+    filter(ID == "Phillips 66 (Group)") %>%
+    ggplot(aes(x=year, y=total_miles)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "loess", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.title = element_text(size=10),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+
+incidents_smooth <- pipelines %>%
+    filter(ID == "Phillips 66 (Group)") %>%
+    ggplot(aes(x=year, y=significant_incidents)) +
+        facet_wrap(~ commodity) +
+        geom_line() +
+        geom_smooth(method = "loess", se = FALSE) +
+        theme(axis.title.x = element_blank(),
+              axis.text.x=element_blank(), 
+              axis.ticks.x = element_blank(),
+              plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+grid.arrange(miles, incidents, miles_smooth, incidents_smooth, ncol = 1)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Pipeline age
+<!-- #endregion -->
+
+```{r}
+sample_n(sample, 5)
 ```
 
 <!-- #region {"slideshow": {"slide_type": "skip"}} -->
