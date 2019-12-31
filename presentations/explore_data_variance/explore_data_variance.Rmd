@@ -730,7 +730,69 @@ sample_n(sample, 5)
 * Minimum yield strength
 * Corosion prevention status
 * HCAs
+* No location data for pipelines :( only for incidents
 <!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+### Incidents
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+incidents <- oildata::incidents
+sample_n(incidents, 5)
+```
+
+```{r}
+cause_counts <- incidents %>%
+    group_by(year, ID, commodity) %>%
+    count(cause) %>%
+    ungroup() %>%
+    group_by(year, ID, cause) %>%
+    summarize(n = sum(n, na.rm = T)) %>%
+    ungroup()
+sample_n(cause_counts, 5)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+print(construction)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+epo_causes <- cause_counts %>%
+    filter(ID == 31618) %>%
+    ggplot(aes(x = year, y = n)) +
+        facet_wrap( ~ cause) + 
+        geom_col()
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+print(epo_causes)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+set.seed(56)
+```
+
+```{r}
+sample_n(subset(incidents_2010, cause == "equipment" & ID == 31618, c(year, narrative)), 1)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+sample_n(subset(incidents_2010, cause == "equipment" & ID == 31618, c(year, narrative)), 1)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+sample_n(subset(incidents_2010, cause == "equipment" & ID == 31618, c(year, narrative)), 1)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+sample_n(subset(incidents_2010, cause == "operation" & ID == 31618, c(year, narrative)), 1)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+locations <- subset(incidents_2010, cause == "operation" & ID == 31618, c(year, LOCATION_LATITUDE, LOCATION_LONGITUDE))
+locations
+```
 
 <!-- #region {"slideshow": {"slide_type": "skip"}} -->
 ### Save slides*
