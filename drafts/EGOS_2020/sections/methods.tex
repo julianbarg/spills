@@ -1,0 +1,7 @@
+\section{Methods}
+
+I use panel regression, in conjunction with Natural Language Processing (NLP) to assess the above hypotheses. The data on improvements in pipeline safety is provided by the US Pipeline and Hazardous Materials Safety Administration (PHMSA). In addition, we use information such as pipeline miles, and age of the pipelines as control variables; this data, too, is obtained from PHMSA. The data used covers the period from 2002-2006. We limited the sample to the 200 largest organizations (by pipeline miles) that are monitored by PHMSA, and after accounting for firm structure (organiztations in the dataset that are actually subsidiaries of other firms), we obtain a sample of 97 organizations. Data on identification of misconduct was obtained from Factiva. 
+
+\subsection{Dependent varaible, independent variables, and control variables}
+
+We use the count of articles that cover oil spills in relationship with the pipelines and pipeline operators as the independent variable for H1. Relevant articles are obtain through an iterative keyword search. To test H2 and H3, we apply topic modeling \citep{Hannigan2019} to articles in the media, industry publications, and sustainability reports of pipeline operators. After identifying the topics (sets of words) that describes near-misses and misconduct/oil spills, we can then obtain a score of how dominant the topic is in sustainability report. The score for the first topic in sustainability reports is used to test H2, and the the presence of the second topic is used for H3. 
