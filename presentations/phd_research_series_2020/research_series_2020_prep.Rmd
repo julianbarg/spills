@@ -1,0 +1,280 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.1'
+      jupytext_version: 1.2.1
+  kernelspec:
+    display_name: R 3.6.1
+    language: R
+    name: ir361
+---
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+# Prep Ivey PhD Research Series
+<!-- #endregion -->
+
+### Julian Barg, 2020-02-11
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Setup
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+library(tidyverse)
+```
+
+```{r}
+library(oildata)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+head(pipelines_2010)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+head(incidents_2010[1:50])
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## 1. There are a few phenomena that got got my attention
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### 1a. Radically diverging epistemologies
+<!-- #endregion -->
+
+https://www.forbes.com/sites/brighammccown/2018/06/04/what-ever-happened-to-the-dakota-access-pipeline/#9b4601b4055c
+
+(Paraphrasing)
+
+*Pipelines are safe. Spills don't happen, and even if they do, we have that under control.*
+
+
+---
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+**Vs.**
+
+https://www.businessinsider.com/north-dakota-access-pipeline-protest-drinking-water-2016-10
+
+(Paraphrasing)
+
+*Our water is pristine. We live in untouched nature, and drink the water from the source, no processing necessary. The pipeline can only diminish our water quality; over the long run, it will.*
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'skip'}}
+
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+On a related note.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+#### The reality of living with a pipeline (or at least one of them)
+<!-- #endregion -->
+
+https://www.theguardian.com/us-news/2020/jan/27/pennsylvania-residents-mariner-east-pipelines-drinking-water-contamination
+
+Another project of Energy Transfer Partners. The project is plagued by problems, and undergoing a criminal investigation. The story illuminates the human dimension, from the perspective of a stakeholder that initially had a positive attitude toward pipelines.
+
+https://marinerpipelinefacts.com/safety/pipeline-safety/
+
+The website emphasizes that Energy Transfer Partners is adhering to all regulations. This is presented as something positive, even though it amounts to "we are not doing anything illegal" (and the lawsuits indicate that even that is not true), while avoiding to discuss the safety record in an empirical way. 
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### 1b. The contents of learning
+<!-- #endregion -->
+
+Learning literature: organizations/populations can choose to learn toward different technologies. For instance, short and long run payoff can differ based on the technology, a famous example from the literature is myopia causing organizations to exploit and learn toward an inferior technology (competency traps; Levinthal and March 1993).
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+#### Mitigation
+
+In the offshore subindustry, the learning objective is mitigation (or at least one goal is). There is no empirical evidence that indicates that this is the superior pathway (and maybe it would be impossible to empirically compare this technology to other options in an objective comparative cost-benefit analysis). In the scientific community this technology is controversiall; while researchers do not dare to make a definitve statement (even in a meta analysis) they recognize that it is possible that dispersants do more (additional) harm than good (Beyer et al. 2016).
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+#### Prevention
+
+In some cases, industries choose prevention rather than mitigation.
+
+1. Canadian Energy Pipeline Association (CEPA) Integrity First initiative
+* https://cepa.com/en/cepa-integrity-first/
+* Goal set as total prevention (zero incidents).
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+**Other industries**
+
+2. Shinkansen "perfect" safety record (no casualties)
+3. Many airlines with perfect safety record
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## 2. Assumptions/boundary conditions
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+1. Pipelines do not constitute complex systems.
+2. Oil spills to not represent failure (or at least they are not interpreted as such). They represent near-misses that are interpreted as success, when the oil spill is contained quickly.
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'skip'}}
+
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## 3. Section title - something with theory I guess?
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+(See also notes)
+
+1\. Companies have environmental impacts
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+2\. Why don't these companies eliminate their environmental impacts?
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+3\. What would be their motivation to do so?
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+4\. a. Environmental feedback
+
+    * Serious accidents (learning from failure literature applies)
+    * Minor failure - reinterpreted as near-misses and disregarded (literature applies)
+
+        Are these environmental feedback?
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+4\. b. In the absense of meaningful environmental feedback, aspirations are the mechanisms. 
+
+    Organizations are selected for their attribute to strive toward improvement/not get worse.
+    
+    Does this also apply if the metric is not crucial to survival? Probably, when decision making is arbitrary.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+5\. How would companies respond to the feedack or to missing an aspirational goal?
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+6\. a. (If goal is met) Exploitation
+6\. b. (If goal is missed) Vicarious learning
+
+    How does population-level learning come into the picture? How is that triggered? If companies are in competition across populations, that would be one reason. If they do not, does population-level learning just not occur?
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+7\. What has learning concentrated on? Qualitative dimension of learning
+    
+    a. Learning could concentrate on mitigation rather than avoidance
+    
+    b. We have strong indications of this, for instance in the debate about dispersants
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+8\. Is there any relevance from this for reducing the number of incidents?
+
+    Maybe in the fact that organizations should choose certain technologies over others - avoid the competency trap.
+    
+    Or maybe in epistemology? Population-wide change based on epistemology changing? This point is close to other literatures though, not learning-specific.
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'skip'}}
+
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## 4. There is a fundamental issue to discuss
+<!-- #endregion -->
+
+"Agenda"
+
+* *Hey, look, there is an impact/performance* does not cut it anymore. 
+* The academic audience is familiar with Superfund sites - they will not be impressed with the discovery of oil spills ("so what").
+* The extention *indigenous communities are suffering* is also not a box that I want to be put in either.
+* There is an expectation that papers offer a "solution", and I don't believe that I am neutral in the endeavor to "find it" (maybe neutral in testing it).
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+There are currently ideas in my head:
+
+1. Technology - population learning is progressing toward *mitigation*. Maybe the learning direction of *prevention* would be more promising, but path dependence/competence trap/myopia.
+    - Competency trap
+2. Aspirations - the idea of a perfect safety record could penetrate the industry. Why do this in learning though?
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## 5. There might be something that I am still missing the language to describe
+<!-- #endregion -->
+
+What is it we are trying to optimize? The number of failure events, or the outcomes thereof?
+
+There are two different learning philosophies out there:
+1. We try to prevent any failure events to occur at all
+2. We try to alleviate the outcomes of all failure events to effectively neutralize them (despite them still occuring)
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+* One could imagine an organization investing in responsiveness rather than upgrading existing infastructure.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* An alternative approach to learning would be to use statistics to identify at-risk equipment.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* An applied example would be oil firms research on dispersants.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+Dispersants are interesting, because they are of questionable usefulness. Resources are invested for one technology that is thought to be useful. At the detriment of more useful activities maybe. One technological path is chosen. Myopia?
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+The problem is (and this is raised quite often in the debate) that to design a safe system in the first place is claimed to be financially infeasible.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+An economically weak argument, because the argument can be made that the original profitibility studies also do not take into consideration the potential cost of the potential accidents that are rendered possible. The unsafe design might also be financially unfeasible, just over a different time frame.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+Related to the Levinthal and March (1993) idea I touched on earlier.
+<!-- #endregion -->
