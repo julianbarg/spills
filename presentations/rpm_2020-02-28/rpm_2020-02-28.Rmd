@@ -1,0 +1,351 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.1'
+      jupytext_version: 1.2.1
+  kernelspec:
+    display_name: R 3.6.1
+    language: R
+    name: ir361
+---
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+# Research Progress Meeting 2020-02-28
+
+## Where do I come from, where do I go?
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+* Research series presentation went well
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* But I lost track of what was said and what I was going to do
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* And I want to get stuff done
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Setup
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+library(tidyverse)
+library(oildata)
+library(DataAnalysisTools)
+options(repr.plot.width=7, repr.plot.height=4)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+head(pipelines)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Throwback: Learning insight from PhD Research Series
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+learning_data <- pipelines %>%
+    filter(commodity %in% c("crude", "hvl", "non_hvl")) %>%
+    group_by(year) %>%
+    summarize(miles = sum(total_miles, na.rm = T), 
+              incidents = sum(significant_incidents, na.rm = T), 
+              incident_rate = incidents/miles)
+
+head(learning_data) %>%
+    jupyter_styling(font_size = 14)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Incident counts
+<!-- #endregion -->
+
+```{r}
+ggplot(learning_data, aes(x = year, y = incidents)) +
+    geom_col()
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Pipeline network expansion
+<!-- #endregion -->
+
+```{r}
+ggplot(learning_data, aes(x = year, y = miles)) +
+    geom_line() + 
+    scale_y_continuous(limits = c(0, 220000))
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Incident rate over time
+<!-- #endregion -->
+
+```{r}
+ggplot(learning_data, aes(x = year, y = incident_rate)) +
+    geom_line() +
+    geom_smooth(method="lm")
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Incident rate by commodity
+<!-- #endregion -->
+
+```{r}
+learning_by_commodity <- pipelines %>%
+    filter(commodity %in% c("crude", "hvl", "non_hvl")) %>%
+    group_by(year, commodity) %>%
+    summarize(miles = sum(total_miles, na.rm = T), 
+              incidents = sum(significant_incidents, na.rm = T), 
+              incident_rate = incidents/miles)
+
+head(learning_by_commodity) %>%
+    jupyter_styling(font_size = 14)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+ggplot(learning_by_commodity, aes(x = year, y = incident_rate, color = commodity)) +
+    geom_line() +
+    geom_smooth(method="lm")
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Learning of largest actors
+<!-- #endregion -->
+
+```{r}
+largest_companies <- pipelines %>%
+    group_by(year, ID) %>%
+    summarize(total_miles = sum(total_miles, na.rm = T)) %>%
+    group_by(ID) %>%
+    filter(total_miles == max(total_miles)) %>%
+    ungroup() %>%
+    top_n(6, total_miles)
+
+largest_companies %>%
+    jupyter_styling(font_size = 14)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+learning_by_company <- pipelines %>%
+    filter(ID %in% largest_companies$ID) %>%
+    group_by(year, ID) %>%
+    summarize(miles = sum(total_miles, na.rm = T), 
+              incidents = sum(significant_incidents, na.rm = T), 
+              incident_rate = incidents/miles) %>%
+    ungroup() %>%
+    mutate(name = add_company_names(ID))
+
+head(learning_by_company) %>%
+    jupyter_styling(font_size = 14)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+learning_by_company %>%
+    filter(miles > 100) %>%
+    ggplot(aes(x = year, y = incidents)) +
+        facet_wrap(~ name) +
+        geom_line() +
+        geom_smooth(method="lm")
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+learning_by_company %>%
+    filter(miles > 100) %>%
+    ggplot(aes(x = year, y = incident_rate)) +
+        facet_wrap(~ name) +
+        geom_line() +
+        geom_smooth(method="lm")
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Learning: Gallons spilled
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+learning_data <- pipelines %>%
+    filter(commodity %in% c("crude", "hvl", "non_hvl")) %>%
+    group_by(year) %>%
+    summarize(miles = sum(total_miles, na.rm = T), 
+              volume = sum(incidents_volume, na.rm = T), 
+              volume_per_mile = volume/miles)
+
+head(learning_data) %>%
+    jupyter_styling(font_size = 14)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Total gallons spilled
+<!-- #endregion -->
+
+```{r}
+ggplot(learning_data, aes(x = year, y = volume)) +
+    geom_col()
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Gallons spilled, normalized trend
+<!-- #endregion -->
+
+```{r}
+ggplot(learning_data, aes(x = year, y = volume_per_mile)) +
+    geom_line() +
+    geom_smooth(method="lm")
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Gallons spilled, by commodity
+<!-- #endregion -->
+
+```{r}
+learning_by_commodity <- pipelines %>%
+    filter(commodity %in% c("crude", "hvl", "non_hvl")) %>%
+    group_by(year, commodity) %>%
+    summarize(miles = sum(total_miles, na.rm = T), 
+              volume = sum(incidents_volume, na.rm = T), 
+              volume_per_mile = volume/miles)
+
+head(learning_by_commodity) %>%
+    jupyter_styling(font_size = 14)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+ggplot(learning_by_commodity, aes(x = year, y = volume_per_mile)) +
+    facet_wrap(~ commodity) +
+    geom_line() +
+    geom_smooth(method="lm")
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Gallons spilled, learning by largest companies
+<!-- #endregion -->
+
+```{r}
+learning_by_company <- pipelines %>%
+    filter(ID %in% largest_companies$ID) %>%
+    group_by(year, ID) %>%
+    summarize(miles = sum(total_miles, na.rm = T), 
+              volume = sum(incidents_volume, na.rm = T), 
+              volume_per_mile = volume/miles) %>%
+    ungroup() %>%
+    mutate(name = add_company_names(ID))
+
+head(learning_by_company) %>%
+    jupyter_styling(font_size = 14)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+learning_by_company %>%
+    filter(miles > 100) %>%
+    ggplot(aes(x = year, y = volume)) +
+        facet_wrap(~ name) +
+        geom_line() +
+        geom_smooth(method="lm")
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+learning_by_company %>%
+    filter(miles > 100) %>%
+    ggplot(aes(x = year, y = volume_per_mile)) +
+        facet_wrap(~ name) +
+        geom_line() +
+        geom_smooth(method="lm")
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Learning: Cost
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+learning_data <- pipelines %>%
+    filter(commodity %in% c("crude", "hvl", "non_hvl")) %>%
+    group_by(year) %>%
+    summarize(miles = sum(total_miles, na.rm = T), 
+              cost = sum(incidents_cost, na.rm = T), 
+              cost_per_mile = cost/miles)
+
+head(learning_data) %>%
+    jupyter_styling(font_size = 14)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Cost by year
+<!-- #endregion -->
+
+```{r}
+ggplot(learning_data, aes(x = year, y = cost)) +
+    geom_col()
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Cost per mile, trend
+<!-- #endregion -->
+
+```{r}
+ggplot(learning_data, aes(x = year, y = cost_per_mile)) +
+    geom_line() +
+    geom_smooth(method="lm")
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Cost by commodity, trend
+<!-- #endregion -->
+
+```{r}
+learning_by_commodity <- pipelines %>%
+    filter(commodity %in% c("crude", "hvl", "non_hvl")) %>%
+    group_by(year, commodity) %>%
+    summarize(miles = sum(total_miles, na.rm = T), 
+              cost = sum(incidents_cost, na.rm = T), 
+              cost_per_mile = cost/miles)
+
+head(learning_by_commodity) %>%
+    jupyter_styling(font_size = 14)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+ggplot(learning_by_commodity, aes(x = year, y = cost_per_mile)) +
+    facet_wrap(~ commodity) +
+    geom_line() +
+    geom_smooth(method="lm")
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Cost for largest companies
+<!-- #endregion -->
+
+```{r}
+learning_by_company <- pipelines %>%
+    filter(ID %in% largest_companies$ID) %>%
+    group_by(year, ID) %>%
+    summarize(miles = sum(total_miles, na.rm = T), 
+              cost = sum(incidents_cost, na.rm = T), 
+              cost_per_mile = cost/miles) %>%
+    ungroup() %>%
+    mutate(name = add_company_names(ID))
+
+head(learning_by_company) %>%
+    jupyter_styling(font_size = 14)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+learning_by_company %>%
+    filter(miles > 100) %>%
+    ggplot(aes(x = year, y = cost)) +
+        facet_wrap(~ name) +
+        geom_line() +
+        geom_smooth(method="lm")
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+learning_by_company %>%
+    filter(miles > 100) %>%
+    ggplot(aes(x = year, y = cost_per_mile)) +
+        facet_wrap(~ name) +
+        geom_line() +
+        geom_smooth(method="lm")
+```
