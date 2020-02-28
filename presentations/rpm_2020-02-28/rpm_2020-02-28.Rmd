@@ -399,3 +399,25 @@ learning_by_company %>%
     * Individuals approach their work with their presumptions, but they obtain results and feed those back into society
     * Iterative process
 <!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Feedback
+<!-- #endregion -->
+
+The genealogical approach is potentially the driving force behind what I am looking at. The two keys are truth and power. Power can make an impact on truth, but when there is a change in the rules of formation of statements of scientific truth. The propositions which are then acceptable under the new regime are then tested and can be verified or falsified by scientists. They then re-inform society.
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+In the case of oil pipelines, it is clear who the power is with. And the truth alligns with our idea of who power is with. It is remarkable, in which context spills are acceptable, and when they are not. In disadvantaged communities, they are acceptable. The oil spill in the gulf of Mexico was not permittable. This led to learning in the second case. But still, the power structure is such that oil spills in many cases are acceptable.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+A change in power can lead to a new regime of what are acceptable propositions. Now, we see a new regime in the sciences. Nature and Science are open to sustainability researchers, and there are many who are willing to research the oil industry there; whereas before relevant research was often sponsored by oil exploration.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+We may see an example of divergence in paths when we look at ownership. The ownership structures impact the power balance between company and external stakeholders, especially the government. Here, it is possible that the power structure makes diverging propositions permitable. For instance, sustainability might be a permitable proposition that is picked up in parts.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+However, the dynamic altogether might be different than in the cases that Foucault describes. Because the coupling with the (natural) environment is stronger. Or maybe that just means that hypotheses that have tested true before (the viablity of oil extraction) are not testing true anymore.
+<!-- #endregion -->
