@@ -349,3 +349,53 @@ learning_by_company %>%
         geom_line() +
         geom_smooth(method="lm")
 ```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Notes
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Off/onshore
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* Trends (I believe) driven by offshore spills
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* Offshore pipelines are still at the beginning of their learning curve
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* (And on average spill more, because source often cannot be "shut off"?)
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### "Agenda"
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* What do I want?
+    * I do not want to "kiss up" to oil companies and show their progress
+    * But I also do not want to be "unfair"
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* I want to illuminate how learning progresses (or not) for less essential functions of an organization
+    * For offshore pipelines, learning is still important, because of criticism
+    * In terms of onshore leaks, it often affects the powerless
+    * Hence learning is less of a priority
+    * Location choice is already briefly mentioned by Perrow
+    * Often build in cheaper locations, which usually also do not increase in price as a result of pipeline construction
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+* Is pipeline security based on technological limitations or dominated by conceptualizations (e.g., "there will always be spills")?
+    * Why aren't there more "zero incident" instances?
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* Genealogy provides a potential "blend" of the two options
+    * Individuals approach their work with their presumptions, but they obtain results and feed those back into society
+    * Iterative process
+<!-- #endregion -->
