@@ -1,0 +1,103 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.1'
+      jupytext_version: 1.2.1
+  kernelspec:
+    display_name: R 3.6.1
+    language: R
+    name: ir361
+---
+
+# Research Progress Meeting 2020-03-xx
+
+
+## Let's see how spills develop in terms of other performance metrics
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Setup
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+library(tidyverse)
+library(oildata)
+library(DataAnalysisTools)
+```
+
+```{r}
+packageVersion("oildata")
+```
+
+```{r}
+head(pipelines)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+total <- pipelines %>%
+    group_by(year, commodity, ID) %>%
+    summarize(!!! pipelines_consolidation) %>%
+    mutate(on_offshore = "total")
+
+glimpse(total)
+```
+
+```{r}
+pipelines <- pipelines %>%
+    bind_rows(total)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Overview
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+pipelines_year <- pipelines %>%
+    group_by(year, on_offshore) %>%
+    summarize(!!! oildata::pipelines_consolidation) %>%
+    pivot_longer(cols = -c(year, on_offshore), names_to = "variable", values_to = "value")
+
+glimpse(pipelines_year)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+unique(pipelines_year$variable)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+overview <- pipelines_year %>%
+    filter(variable %in% c("miles", "significant_incidents", "incidents_cost", "incidents_volume")) %>%
+    ggplot(aes(x = year, y = value)) +
+        facet_wrap(on_offshore ~ variable, scales = "free") +
+        geom_line()
+
+options(repr.plot.width=8, repr.plot.height=6)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+overview
+```
+
+All cost in 1984 dollars. Volume spilled in gallons.
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### What is that cost spike in 2009 for *onshore*?!
+<!-- #endregion -->
+
+```{r}
+subset(incidents, on_offshore == "onshore" & cost_1984 > 1e+8, -narrative)
+```
+
+It is the Kalamazoo River oil spill.
+
+```{r slideshow={'slide_type': 'subslide'}}
+subset(incidents, round(cost_1984) == 460446182)$narrative %>%
+    jupyter_styling(font_size = 14)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Volume spilled
+<!-- #endregion -->
