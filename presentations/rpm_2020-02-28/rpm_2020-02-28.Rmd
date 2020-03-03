@@ -421,3 +421,7 @@ We may see an example of divergence in paths when we look at ownership. The owne
 <!-- #region {"slideshow": {"slide_type": "fragment"}} -->
 However, the dynamic altogether might be different than in the cases that Foucault describes. Because the coupling with the (natural) environment is stronger. Or maybe that just means that hypotheses that have tested true before (the viablity of oil extraction) are not testing true anymore.
 <!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+Also, I forgot to mention that, but I still think the EU regulation on energy-efficient light bulbs was an important moment. It shows how entranched producers were in current technology, even as the benefit of new technology were very fast. LEDs quickly went from unfeasible to universally adopted.
+<!-- #endregion -->
