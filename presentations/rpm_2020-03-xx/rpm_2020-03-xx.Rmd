@@ -93,10 +93,36 @@ subset(incidents, on_offshore == "onshore" & cost_1984 > 1e+8, -narrative)
 
 It is the Kalamazoo River oil spill.
 
+https://en.wikipedia.org/wiki/Kalamazoo_River_oil_spill
+
 ```{r slideshow={'slide_type': 'subslide'}}
 subset(incidents, round(cost_1984) == 460446182)$narrative %>%
     jupyter_styling(font_size = 14)
 ```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### What happened with offshore in '04?
+<!-- #endregion -->
+
+```{r}
+subset(incidents, on_offshore == "offshore" & cost_1984 > 1e+7, -c(narrative, DATAFILE_AS_OF, significant, TOTAL_COST_CURRENT))
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+subset(incidents, round(cost_1984) == 14956852)$narrative
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+subset(incidents, round(cost_1984) == 10968391)$narrative
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}, "jupyter": {"source_hidden": true}} -->
+* The Chevron incident is the direct result of Hurricane Ivan in 2004:
+    * https://en.wikipedia.org/wiki/Hurricane_Ivan
+    * https://www.nytimes.com/2005/08/05/business/gulf-hurricanes-arelatest-kink-in-oil-chain.html
+* Less information can be found on the damage to BP's offshore pipeline, but it is related to Hurrican Ivan also. The Hurricane cause earth movement, which for instance caused the Taylor Oil Spill. The Taylor platform used to belong to BP, so it seems likely that the same event also damaged a pipeline of BP in the area.
+    * https://en.wikipedia.org/wiki/Taylor_oil_spill
+<!-- #endregion -->
 
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
 ## Volume spilled

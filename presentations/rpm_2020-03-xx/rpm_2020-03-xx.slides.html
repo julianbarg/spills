@@ -13337,7 +13337,7 @@ a.anchor-link {
 
 
 <div class="output_text output_subarea ">
-<pre>[1] ‘0.10.6’</pre>
+<pre>[1] ‘0.10.7’</pre>
 </div>
 
 </div>
@@ -14571,13 +14571,13 @@ RU5ErkJggg=="
 
 <div class="output_html rendered_html output_subarea ">
 <table>
-<caption>A tibble: 1 × 20</caption>
+<caption>A tibble: 1 × 23</caption>
 <thead>
-	<tr><th scope=col>DATAFILE_AS_OF</th><th scope=col>significant</th><th scope=col>serious</th><th scope=col>ID</th><th scope=col>name</th><th scope=col>year</th><th scope=col>cost</th><th scope=col>cost_1984</th><th scope=col>TOTAL_COST_CURRENT</th><th scope=col>commodity</th><th scope=col>on_offshore</th><th scope=col>installation_year</th><th scope=col>FATAL</th><th scope=col>INJURE</th><th scope=col>cause</th><th scope=col>CAUSE_DETAILS</th><th scope=col>MAP_CAUSE</th><th scope=col>MAP_SUBCAUSE</th><th scope=col>SPILL_TYPE_CATEGORY</th><th scope=col>volume</th></tr>
-	<tr><th scope=col>&lt;dttm&gt;</th><th scope=col>&lt;lgl&gt;</th><th scope=col>&lt;lgl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
+	<tr><th scope=col>DATAFILE_AS_OF</th><th scope=col>significant</th><th scope=col>serious</th><th scope=col>ID</th><th scope=col>name</th><th scope=col>year</th><th scope=col>lat</th><th scope=col>long</th><th scope=col>cost</th><th scope=col>cost_1984</th><th scope=col>⋯</th><th scope=col>installation_year</th><th scope=col>FATAL</th><th scope=col>INJURE</th><th scope=col>cause</th><th scope=col>CAUSE_DETAILS</th><th scope=col>MAP_CAUSE</th><th scope=col>MAP_SUBCAUSE</th><th scope=col>SPILL_TYPE_CATEGORY</th><th scope=col>volume</th><th scope=col>date</th></tr>
+	<tr><th scope=col>&lt;dttm&gt;</th><th scope=col>&lt;lgl&gt;</th><th scope=col>&lt;lgl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>⋯</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;date&gt;</th></tr>
 </thead>
 <tbody>
-	<tr><td>2020-01-30 04:18:51</td><td>TRUE</td><td>FALSE</td><td>11169</td><td>Enbridge Energy, Limited Partnership</td><td>2010</td><td>840526118</td><td>460446182</td><td>983088852</td><td>crude</td><td>onshore</td><td>1969</td><td>NA</td><td>NA</td><td>material</td><td>ENVIRONMENTAL CRACKING-RELATED</td><td>MATERIAL/WELD/EQUIP FAILURE</td><td>ENVIRONMENTAL CRACKING-RELATED</td><td>LARGE</td><td>20082</td></tr>
+	<tr><td>2020-01-30 04:18:51</td><td>TRUE</td><td>FALSE</td><td>11169</td><td>Enbridge Energy, Limited Partnership</td><td>2010</td><td>42.24329</td><td>-84.97251</td><td>840526118</td><td>460446182</td><td>⋯</td><td>1969</td><td>NA</td><td>NA</td><td>material</td><td>ENVIRONMENTAL CRACKING-RELATED</td><td>MATERIAL/WELD/EQUIP FAILURE</td><td>ENVIRONMENTAL CRACKING-RELATED</td><td>LARGE</td><td>20082</td><td>2010-07-25</td></tr>
 </tbody>
 </table>
 
@@ -14593,6 +14593,7 @@ RU5ErkJggg=="
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>It is the Kalamazoo River oil spill.</p>
+<p><a href="https://en.wikipedia.org/wiki/Kalamazoo_River_oil_spill">https://en.wikipedia.org/wiki/Kalamazoo_River_oil_spill</a></p>
 
 </div>
 </div>
@@ -14640,6 +14641,138 @@ RU5ErkJggg=="
 </div>
 </div>
 
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="What-happened-with-offshore-in-'04?">What happened with offshore in '04?<a class="anchor-link" href="#What-happened-with-offshore-in-'04?">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-r"><pre><span></span><span class="nf">subset</span><span class="p">(</span><span class="n">incidents</span><span class="p">,</span> <span class="n">on_offshore</span> <span class="o">==</span> <span class="s">&quot;offshore&quot;</span> <span class="o">&amp;</span> <span class="n">cost_1984</span> <span class="o">&gt;</span> <span class="m">1e+7</span><span class="p">,</span> <span class="o">-</span><span class="nf">c</span><span class="p">(</span><span class="n">narrative</span><span class="p">,</span> <span class="n">DATAFILE_AS_OF</span><span class="p">,</span> <span class="n">significant</span><span class="p">,</span> <span class="n">TOTAL_COST_CURRENT</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<table>
+<caption>A tibble: 2 × 20</caption>
+<thead>
+	<tr><th scope=col>serious</th><th scope=col>ID</th><th scope=col>name</th><th scope=col>year</th><th scope=col>lat</th><th scope=col>long</th><th scope=col>cost</th><th scope=col>cost_1984</th><th scope=col>commodity</th><th scope=col>on_offshore</th><th scope=col>installation_year</th><th scope=col>FATAL</th><th scope=col>INJURE</th><th scope=col>cause</th><th scope=col>CAUSE_DETAILS</th><th scope=col>MAP_CAUSE</th><th scope=col>MAP_SUBCAUSE</th><th scope=col>SPILL_TYPE_CATEGORY</th><th scope=col>volume</th><th scope=col>date</th></tr>
+	<tr><th scope=col>&lt;lgl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;date&gt;</th></tr>
+</thead>
+<tbody>
+	<tr><td>FALSE</td><td>30969</td><td>Main Pass Oil Gathering System</td><td>2004</td><td>NA</td><td>NA</td><td>17600200</td><td>10968391</td><td>crude</td><td>offshore</td><td>1996</td><td>0</td><td>0</td><td>natural forces</td><td>HIGH WINDS    </td><td>NATURAL FORCE DAMAGE</td><td>HIGH WINDS    </td><td>LARGE</td><td>5</td><td>2004-10-25</td></tr>
+	<tr><td>FALSE</td><td> 2731</td><td>Chevron Pipe Line             </td><td>2004</td><td>NA</td><td>NA</td><td>24000200</td><td>14956852</td><td>crude</td><td>offshore</td><td>  NA</td><td>0</td><td>0</td><td>natural forces</td><td>EARTH MOVEMENT</td><td>NATURAL FORCE DAMAGE</td><td>EARTH MOVEMENT</td><td>LARGE</td><td>4</td><td>2004-10-17</td></tr>
+</tbody>
+</table>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-r"><pre><span></span><span class="nf">subset</span><span class="p">(</span><span class="n">incidents</span><span class="p">,</span> <span class="nf">round</span><span class="p">(</span><span class="n">cost_1984</span><span class="p">)</span> <span class="o">==</span> <span class="m">14956852</span><span class="p">)</span><span class="o">$</span><span class="n">narrative</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style=white-space:pre-wrap>'The subject pipeline was unintentionally moved by a underwater mud-slide that was generated by wave action by hurricane ivan.  The pipeline was torn in two by the forces of the mud-slide.  The seperation took place in south pass 38.  The pipeline was eventually located on october 18, 2004.    The leak duration in part g, item 3 is listed as 0-days and 0-hours because when the pipe was seperated it was shut-in for hurricane ivan and the spill was instantaneous.'</span>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-r"><pre><span></span><span class="nf">subset</span><span class="p">(</span><span class="n">incidents</span><span class="p">,</span> <span class="nf">round</span><span class="p">(</span><span class="n">cost_1984</span><span class="p">)</span> <span class="o">==</span> <span class="m">10968391</span><span class="p">)</span><span class="o">$</span><span class="n">narrative</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style=white-space:pre-wrap>'During post-storm impact from hurricane ivan visible oil sheens were observed and reported near bp\'s main pass oil gathering pipeline in the vicinity of main pass block 69.  The oil sheens reported on 10-1-04 were fingerprinted and later confirmed as product transported in shell\'s 18" pipeline.  During bp\'s post-storm assessments for the main pass oil gathering pipeline it was also confirmed that required separation was lost between the main pass oil gathering pipeline and shell\'s 18" pipeline in the vicinity of main pass block 69.  It was during the operation of separating these two pipelines that the release from the main pass oil gathering pipeline occurred. The 10-26-04 leak was confirmed during a lifting of shell\'s equilon 18" pipeline which was was located above and physically contacting the main pass oil gathering pipeline.  Just prior to the lifting of the shell pipeline, divers had removed the shell pipeline concrete coating with waterblasting equipment.  The bare portion of the lower main pass oil gathering pipeline was then examined and identified as having small pinholes in the vicinity of the contact point between the two pipelines, thus allowing crude oil to be released to receiving waters.  During this operation recovery equipment was in place and collecting all crude oil being released from the pipeline.'</span>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>The Chevron incident is the direct result of Hurricane Ivan in 2004:<ul>
+<li><a href="https://en.wikipedia.org/wiki/Hurricane_Ivan">https://en.wikipedia.org/wiki/Hurricane_Ivan</a></li>
+<li><a href="https://www.nytimes.com/2005/08/05/business/gulf-hurricanes-arelatest-kink-in-oil-chain.html">https://www.nytimes.com/2005/08/05/business/gulf-hurricanes-arelatest-kink-in-oil-chain.html</a></li>
+</ul>
+</li>
+<li>Less information can be found on the damage to BP's offshore pipeline, but it is related to Hurrican Ivan also. The Hurricane cause earth movement, which for instance caused the Taylor Oil Spill. The Taylor platform used to belong to BP, so it seems likely that the same event also damaged a pipeline of BP in the area.<ul>
+<li><a href="https://en.wikipedia.org/wiki/Taylor_oil_spill">https://en.wikipedia.org/wiki/Taylor_oil_spill</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
 </div></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
