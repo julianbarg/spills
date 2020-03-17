@@ -36,20 +36,6 @@ packageVersion("oildata")
 head(pipelines)
 ```
 
-```{r slideshow={'slide_type': 'subslide'}}
-total <- pipelines %>%
-    group_by(year, commodity, ID) %>%
-    summarize(!!! pipelines_consolidation) %>%
-    mutate(on_offshore = "total")
-
-glimpse(total)
-```
-
-```{r}
-pipelines <- pipelines %>%
-    bind_rows(total)
-```
-
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
 ## Overview
 <!-- #endregion -->
@@ -116,7 +102,7 @@ subset(incidents, round(cost_1984) == 14956852)$narrative
 subset(incidents, round(cost_1984) == 10968391)$narrative
 ```
 
-<!-- #region {"slideshow": {"slide_type": "subslide"}, "jupyter": {"source_hidden": true}} -->
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
 * The Chevron incident is the direct result of Hurricane Ivan in 2004:
     * https://en.wikipedia.org/wiki/Hurricane_Ivan
     * https://www.nytimes.com/2005/08/05/business/gulf-hurricanes-arelatest-kink-in-oil-chain.html
@@ -125,5 +111,65 @@ subset(incidents, round(cost_1984) == 10968391)$narrative
 <!-- #endregion -->
 
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
-## Volume spilled
+## By commodity without offshore
 <!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+pipelines_y_c <- pipelines %>%
+    filter(on_offshore == "onshore") %>%
+    filter(commodity %in% c("crude", "hvl", "rpp")) %>%
+    group_by(year, commodity) %>%
+    summarize(!!! oildata::pipelines_consolidation) %>%
+    pivot_longer(cols = -c(year, commodity), names_to = "variable", values_to = "value")
+
+glimpse(pipelines_y_c)
+```
+
+```{r}
+overview_y_c <- pipelines_y_c %>%
+    filter(variable %in% c("miles", "significant_incidents", "incidents_cost", "incidents_volume")) %>%
+    ggplot(aes(x = year, y = value)) +
+        facet_wrap(commodity ~ variable, scales = "free") +
+        geom_line() +
+        geom_smooth(method = "lm")
+
+options(repr.plot.width=8, repr.plot.height=6)
+```
+
+```{r}
+overview_y_c
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Relative to miles and volume transported
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+pipelines_y_c <- pipelines %>%
+    filter(on_offshore == "onshore") %>%
+    filter(commodity %in% c("crude", "hvl", "rpp")) %>%
+    group_by(year, commodity) %>%
+    summarize(!!! oildata::pipelines_consolidation) %>%
+    mutate(cost_per_mile = incidents_cost/miles, 
+           cost_per_volume = incidents_cost/estimate_volume_all, 
+           volume_per_mile = incidents_volume/miles,
+           volume_per_volume = incidents_volume/estimate_volume_all) %>%
+    pivot_longer(cols = -c(year, commodity), names_to = "variable", values_to = "value")
+
+glimpse(pipelines_y_c)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+standardized <- pipelines_y_c %>%
+    filter(variable %in% c("cost_per_mile", "cost_per_volume", "volume_per_mile", "volume_per_volume")) %>%
+    ggplot(aes(x = year, y = value)) +
+        facet_wrap(commodity ~ variable, scales = "free") +
+        geom_line() +
+        geom_smooth(method = "lm")
+
+options(repr.plot.width=8, repr.plot.height=6)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+standardized
+```
