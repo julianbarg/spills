@@ -173,3 +173,39 @@ options(repr.plot.width=8, repr.plot.height=6)
 ```{r slideshow={'slide_type': 'subslide'}}
 standardized
 ```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Detailed view
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+options(repr.plot.width=8, repr.plot.height=5)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+pipelines_y_c %>%
+    filter(variable == "volume_per_volume") %>%
+    ggplot(aes(x=year, y=value, color=commodity)) + 
+        geom_line() +
+        labs(y = "Gallons of oil spilled per gallon-mile transported")
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+pipelines_y_c %>%
+    filter(variable == "volume_per_volume") %>%
+    ggplot(aes(x=year, y=value)) + 
+        facet_wrap(~commodity) +
+        geom_line() +
+        geom_smooth(method = "lm") +
+        labs(y = "Gallons of oil spilled per gallon-mile transported")
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+pipelines_y_c %>%
+    filter(variable == "cost_per_volume") %>%
+    ggplot(aes(x=year, y=value)) + 
+        facet_wrap(~commodity) +
+        geom_line() +
+        geom_smooth(method = "lm") +
+        labs(y = "Cost of damage by oil spills in USD per gallon-mile transported")
+```
