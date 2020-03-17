@@ -136,7 +136,7 @@ overview_y_c <- pipelines_y_c %>%
 options(repr.plot.width=8, repr.plot.height=6)
 ```
 
-```{r}
+```{r slideshow={'slide_type': 'subslide'}}
 overview_y_c
 ```
 
