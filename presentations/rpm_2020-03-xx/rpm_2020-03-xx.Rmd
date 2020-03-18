@@ -251,7 +251,7 @@ largest_companies %>%
 add_company_names(31618)
 ```
 
-```{r slideshow={'slide_type': 'subslide'}}
+```{r slideshow={'slide_type': 'skip'}}
 operators <- pipelines %>%
     filter(ID %in% c("31618", "Energy Transfer Partners (Group)", "Kinder Morgan (Group)")) %>%
     mutate(ID = add_company_names(ID)) %>%
@@ -271,7 +271,7 @@ glimpse(operators)
 ### Volume spilled per volume transported
 <!-- #endregion -->
 
-```{r}
+```{r slideshow={'slide_type': 'skip'}}
 crude <- operators %>%
     filter(variable %in% c("volume_per_volume")) %>%
     filter(commodity == "crude") %>%
@@ -306,7 +306,7 @@ rpp <- operators %>%
         labs(title = "Refined petroleum products", x = NULL, y = NULL)
 ```
 
-```{r slideshow={'slide_type': 'subslide'}}
+```{r slideshow={'slide_type': 'skip'}}
 spill_volume_by_operator <- arrangeGrob(crude, hvl, rpp, ncol=1, left = "Gallons of oil spilled per gallon-mile transported")
 
 options(repr.plot.width=8, repr.plot.height=6)
@@ -320,7 +320,7 @@ grid::grid.draw(spill_volume_by_operator)
 ### Total miles
 <!-- #endregion -->
 
-```{r}
+```{r slideshow={'slide_type': 'skip'}}
 crude <- operators %>%
     filter(variable %in% c("miles")) %>%
     filter(commodity == "crude") %>%
@@ -355,7 +355,7 @@ rpp <- operators %>%
         labs(title = "Refined petroleum products", x = NULL, y = NULL)
 ```
 
-```{r slideshow={'slide_type': 'subslide'}}
+```{r slideshow={'slide_type': 'skip'}}
 volume_transported_by_operator <- arrangeGrob(crude, hvl, rpp, ncol=1, left = "Miles of pipeline")
 
 options(repr.plot.width=8, repr.plot.height=6)
@@ -373,17 +373,13 @@ grid::grid.draw(spill_volume_by_operator)
 ### Using size argument
 <!-- #endregion -->
 
-```{r}
-glimpse(operators)
-```
-
-```{r}
+```{r slideshow={'slide_type': 'skip'}}
 operators2 <- operators %>%
     filter(variable %in% c("volume_per_volume", "miles")) %>%
     pivot_wider(id_cols = c(year, commodity, ID), names_from = "variable", values_from = "value")
 ```
 
-```{r slideshow={'slide_type': 'subslide'}}
+```{r slideshow={'slide_type': 'skip'}}
 crude <- operators2 %>%
     filter(commodity == "crude") %>%
     ggplot(aes(x=year, y=volume_per_volume, size=miles)) +
@@ -415,7 +411,7 @@ rpp <- operators2 %>%
         labs(title = "Refined petroleum products", x = NULL, y = NULL)
 ```
 
-```{r slideshow={'slide_type': 'subslide'}}
+```{r slideshow={'slide_type': 'skip'}}
 volume_per_size <- arrangeGrob(crude, hvl, rpp, ncol=1, left = "Gallons of oil spilled per gallon-mile transported")
 
 options(repr.plot.width=8, repr.plot.height=6)
@@ -427,4 +423,34 @@ grid::grid.draw(volume_per_size)
 
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
 ## Test using all volume vs specific volume
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+using_volume_specific <- pipelines %>%
+    filter(on_offshore == "onshore") %>%
+    filter(commodity %in% c("crude", "hvl", "rpp")) %>%
+    group_by(year, commodity) %>%
+    summarize(!!! oildata::pipelines_consolidation) %>%
+    mutate(volume_per_volume_specific = (
+               incidents_volume/estimate_volume_specific), 
+           cost_per_volume_specific = (
+               incidents_cost/estimate_volume_specific)) %>%
+    pivot_longer(cols = -c(year, commodity), 
+                 names_to = "variable", values_to = "value") %>%
+    filter(variable %in% c("cost_per_volume_specific", 
+                           "volume_per_volume_specific")) %>%
+    ggplot(aes(x = year, y = value)) +
+        facet_wrap(variable ~ commodity, scales = "free") +
+        geom_line() +
+        geom_smooth(method = "lm")
+
+options(repr.plot.width=8, repr.plot.height=6)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+using_volume_specific
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+It looks very much the same as the previous graph, using volume_all.
 <!-- #endregion -->
