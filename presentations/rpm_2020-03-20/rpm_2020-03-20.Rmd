@@ -1,0 +1,128 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.1'
+      jupytext_version: 1.2.1
+  kernelspec:
+    display_name: R 3.6.1
+    language: R
+    name: ir361
+---
+
+# Research Progress Meeting 2020-03-18
+<img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Oil_Siphon_%284885250078%29.jpg" alt="Kalamazoo River oil spill" style="width:45%"> 
+Image: Kalamazoo River oil spill
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+## Purpose
+
+My previous analyses focused mostly on incident counts and extends of pipeline networks. But both pipeline incidents and networks are heterogeneous. Many questions I received at the PhD Research Series focused on how much oil was being spilled, and whether leaks were being contained. Therefore, I now obtained data on both the amount of oil transported (in barrel-miles) and on the amount of oil spilled.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Setup
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+library(tidyverse)
+library(oildata)
+library(DataAnalysisTools)
+library(gridExtra)
+```
+
+```{r}
+packageVersion("oildata")
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+head(pipelines)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Transform
+<!-- #endregion -->
+
+```{r}
+pipelines_year <- pipelines %>%
+    filter(commodity %in% c("crude", "hvl", "rpp")) %>%
+    group_by(year, on_offshore) %>%
+    summarize(!!! oildata::pipelines_consolidation) %>%
+    pivot_longer(cols = -c(year, on_offshore), names_to = "variable", values_to = "value")
+
+glimpse(pipelines_year)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## About the data
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+unique(pipelines_year$variable)
+```
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+## Volume estimates
+
+Prior to 2010, the PHMSA does not differentiate betwen on and offshroe pipeline miles. They do however provide separate columns on what volume is transported onshore and offshore. For the purpose of this inquiry, I constructed columns which contain the actual values for 2010 onward (or where available) and an approximation for other values. The approximation takes the value of the share of offshore (or onshore) to total pipeline miles multiplied by the total volume transported.
+
+$v_{est\_off} = \frac{miles_{off}}{miles_{on} + miles_{off}} * v_{total}$
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## How much oil is being transported and spilled?
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Looking at both onshore and offshore
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+#### Pipeline network
+<!-- #endregion -->
+
+```{r}
+overview <- pipelines_year %>%
+    filter(variable %in% c("miles", "volume_all", "estimate_volume_all", "estimate_volume_specific")) %>%
+    ggplot(aes(x = year, y = value)) +
+        facet_wrap(on_offshore ~ variable, scales = "free") +
+        geom_line()
+
+options(repr.plot.width=8, repr.plot.height=6)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+overview
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+We can see that the volume of oil transported does not at all follow a trend that is parallel to the number of pipeline miles. That might be both because of uncertainty in eventual output of oil wells, and because pipelines have different throughput (i.e., different diameter). 
+
+One piece of good news is that estimate_volume_specific is very close to estimate_volume_all, so we will not have to worry about the difference between the two too much. The divergence comes about e.g., when a crude oil pipeline is used to temporarily transport crude.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+#### Details
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'fragment'}}
+details_v_m <- pipelines_year %>%
+    filter(on_offshore %in% c("total")) %>%
+    filter(variable %in% c("miles", "estimate_volume_all")) %>%
+    ggplot(aes(x = year, y = value)) +
+        facet_wrap(on_offshore ~ variable, scales = "free") +
+        geom_line() + 
+        scale_y_continuous(limits = c(0, NA))
+        
+
+options(repr.plot.width=8, repr.plot.height=4)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+details_v_m
+```
+
+The comparison shows that the uptick in volume transported is much more significant than that in pipeline miles. Existing pipelines are used to transport more oil, or pipelines with larger diameters are used, supposedly because of the fracking boom.
