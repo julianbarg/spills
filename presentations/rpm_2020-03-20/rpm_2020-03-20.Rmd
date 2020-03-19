@@ -23,6 +23,20 @@ Image: Kalamazoo River oil spill
 My previous analyses focused mostly on incident counts and extends of pipeline networks. But both pipeline incidents and networks are heterogeneous. Many questions I received at the PhD Research Series focused on how much oil was being spilled, and whether leaks were being contained. Therefore, I now obtained data on both the amount of oil transported (in barrel-miles) and on the amount of oil spilled.
 <!-- #endregion -->
 
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+The primary purpose will be to establish whether there are any big trends on learning or not. Where are improvements being made, where are not improvements?
+<!-- #endregion -->
+
+---
+
+**I.e., establish some facts.**
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+---
+
+As a side note, original code is retained where it is not too complicated, to give a sense of the original dataset.
+<!-- #endregion -->
+
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
 ## Setup
 <!-- #endregion -->
@@ -54,6 +68,25 @@ pipelines_year <- pipelines %>%
     pivot_longer(cols = -c(year, on_offshore), names_to = "variable", values_to = "value")
 
 glimpse(pipelines_year)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+pipelines_y_c <- pipelines %>%
+    filter(on_offshore == "onshore") %>%
+    filter(commodity %in% c("crude", "hvl", "rpp")) %>%
+    group_by(year, commodity) %>%
+    summarize(!!! oildata::pipelines_consolidation) %>%
+    mutate(cost_per_mile = incidents_cost/miles, 
+           cost_per_volume = incidents_cost/estimate_volume_all, 
+           volume_per_mile = incidents_volume/miles,
+           volume_per_volume = incidents_volume/estimate_volume_all,
+           inc_per_mile = incidents/miles, 
+           inc_per_volume = incidents/estimate_volume_all,
+           sign_inc_per_mile = significant_incidents/miles,
+           sign_inc_per_volume = significant_incidents/estimate_volume_all) %>%
+    pivot_longer(cols = -c(year, commodity), names_to = "variable", values_to = "value")
+
+glimpse(pipelines_y_c)
 ```
 
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
@@ -99,30 +132,265 @@ overview
 ```
 
 <!-- #region {"slideshow": {"slide_type": "subslide"}} -->
-We can see that the volume of oil transported does not at all follow a trend that is parallel to the number of pipeline miles. That might be both because of uncertainty in eventual output of oil wells, and because pipelines have different throughput (i.e., different diameter). 
+* The volume transported increases in all cases.
+<!-- #endregion -->
 
-One piece of good news is that estimate_volume_specific is very close to estimate_volume_all, so we will not have to worry about the difference between the two too much. The divergence comes about e.g., when a crude oil pipeline is used to temporarily transport crude.
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* The three variables, volume_all, estimate_volume_specific, and estimate_volume_all are very similar, so we do not have to worry about variable selection too much.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* In the case of offshore production, the product is increase without a corresponding increase in pipeline miles.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* The divergence in more oil being transported for offshore might be due to unceratinty in eventual outpul of wells, and because of different througput (i.e., different diameters).
 <!-- #endregion -->
 
 <!-- #region {"slideshow": {"slide_type": "subslide"}} -->
 #### Details
 <!-- #endregion -->
 
-```{r slideshow={'slide_type': 'fragment'}}
-details_v_m <- pipelines_year %>%
+```{r}
+details_1 <- pipelines_year %>%
     filter(on_offshore %in% c("total")) %>%
     filter(variable %in% c("miles", "estimate_volume_all")) %>%
     ggplot(aes(x = year, y = value)) +
         facet_wrap(on_offshore ~ variable, scales = "free") +
         geom_line() + 
         scale_y_continuous(limits = c(0, NA))
-        
 
 options(repr.plot.width=8, repr.plot.height=4)
 ```
 
 ```{r slideshow={'slide_type': 'subslide'}}
-details_v_m
+details_1
 ```
 
 The comparison shows that the uptick in volume transported is much more significant than that in pipeline miles. Existing pipelines are used to transport more oil, or pipelines with larger diameters are used, supposedly because of the fracking boom.
+
+```{r slideshow={'slide_type': 'skip'}}
+details_2_volume <- pipelines_year %>%
+    filter(variable %in% c("estimate_volume_all")) %>%
+    filter(on_offshore %in% c("onshore", "offshore")) %>%
+    ggplot(aes(x = year, y = value)) +
+        facet_wrap(variable ~ on_offshore) +
+        geom_line() + 
+        labs(x = NULL)
+
+details_2_miles <- pipelines_year %>%
+    filter(variable %in% c("miles")) %>%
+    filter(on_offshore %in% c("onshore", "offshore")) %>%
+    ggplot(aes(x = year, y = value)) +
+        facet_wrap(variable ~ on_offshore) +
+        geom_line() + 
+        labs(x = NULL)
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+volume_miles_on_offshore <- arrangeGrob(details_2_volume, details_2_miles, ncol=1)
+
+options(repr.plot.width=8, repr.plot.height=5)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+grid::grid.draw(volume_miles_on_offshore)
+```
+
+Both offshore pipeline networks and volume transported is dwarfed by onshore.
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Looking and both onshore and offshore
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+### Incidents
+<!-- #endregion -->
+
+```{r}
+overview_spills <- pipelines_year %>%
+    filter(variable %in% c("incidents_cost", "incidents_volume", "significant_incidents", "estimate_volume_all")) %>%
+    ggplot(aes(x = year, y = value)) +
+        facet_wrap(on_offshore ~ variable, scales = "free") +
+        geom_line() +
+        geom_smooth(method = "lm", se = FALSE)
+
+options(repr.plot.width=8, repr.plot.height=6)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+overview_spills
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+Obviously, this initially looks promising - with the volume being transported increasing, the volume of oil being spilled stays constant.
+
+---
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+A look at the row offshore immediately reveals a weakness of the dataset: The Deepwater Horizon oil spill is not captured, because this spill occured directly at the source.
+
+---
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+Further, the comperison of the three rows reveals that overall, offshore is just a small drop in the bucket. The trends are somewhat parallel (except for the year 2004 for offshore), and onshore far outscales offshore.
+
+There is also a spike in 2009: Kalamazoo River oil spill - second largest in history.
+
+---
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+Moving forward, I will analyse the heterogeneity in progress between different commodities, for onshore - Crude, Highly Volatile Liquids, and Refined Petroleum Products.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Noteworthy spills
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### What is that cost spike in 2009 for *onshore*?!
+<!-- #endregion -->
+
+```{r}
+subset(incidents, on_offshore == "onshore" & cost_1984 > 1e+8, -narrative)
+```
+
+It is the Kalamazoo River oil spill.
+
+https://en.wikipedia.org/wiki/Kalamazoo_River_oil_spill
+
+```{r slideshow={'slide_type': 'subslide'}}
+subset(incidents, round(cost_1984) == 460446182)$narrative %>%
+    jupyter_styling(font_size = 14)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### What happened with offshore in '04?
+<!-- #endregion -->
+
+```{r}
+subset(incidents, on_offshore == "offshore" & cost_1984 > 1e+7, -c(narrative, DATAFILE_AS_OF, significant, TOTAL_COST_CURRENT))
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+subset(incidents, round(cost_1984) == 14956852)$narrative
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+subset(incidents, round(cost_1984) == 10968391)$narrative
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+* The Chevron incident is the direct result of Hurricane Ivan in 2004:
+    * https://en.wikipedia.org/wiki/Hurricane_Ivan
+    * https://www.nytimes.com/2005/08/05/business/gulf-hurricanes-arelatest-kink-in-oil-chain.html
+* Less information can be found on the damage to BP's offshore pipeline, but it is related to Hurrican Ivan also. The Hurricane cause earth movement, which for instance caused the Taylor Oil Spill. The Taylor platform used to belong to BP, so it seems likely that the same event also damaged a pipeline of BP in the area.
+    * https://en.wikipedia.org/wiki/Taylor_oil_spill
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## How are the spills developing, relative to volume transported?
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Briefly - how does the utilization of pipelines change over time
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'skip'}}
+volume_miles_by_commodity <- pipelines_y_c %>%
+    filter(variable %in% c("estimate_volume_specific", "miles")) %>%
+    pivot_wider(names_from="variable", values_from="value") %>%
+    group_by(commodity) %>%
+    arrange(desc(year)) %>%
+    mutate(estimate_volume_specific = estimate_volume_specific / lead(estimate_volume_specific), 
+           miles = miles / lead(miles)) %>%
+    pivot_longer(cols = -c(year, commodity), names_to = "variable", values_to = "value") %>%
+    ggplot(aes(x=year, y=value, color=commodity)) + 
+        facet_wrap(~ variable, scale = "free", ncol = 1) +
+        geom_point() +
+        geom_line() +
+        labs(title = "Change in volume transported", y = "Volume transported YoY change (in %)")
+
+options(repr.plot.width=8, repr.plot.height=4)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+volume_miles_by_commodity
+```
+
+There are more Highly Volatile Liquids (HVL) being transported without so much new pipelines being constructed. In contrast, modest increases in crude transported correspond to many new pipeline miles being constructed.
+
+```{r slideshow={'slide_type': 'skip'}}
+standardized_1 <- pipelines_y_c %>%
+    filter(variable %in% c("inc_per_mile", "inc_per_volume", "sign_inc_per_mile", "sign_inc_per_volume")) %>%
+    ggplot(aes(x = year, y = value)) +
+        facet_wrap(commodity ~ variable, scales = "free") +
+        geom_line() +
+        geom_smooth(method = "lm")
+
+standardized_2 <- pipelines_y_c %>%
+    filter(variable %in% c("cost_per_mile", "cost_per_volume", "volume_per_mile", "volume_per_volume")) %>%
+    ggplot(aes(x = year, y = value)) +
+        facet_wrap(commodity ~ variable, scales = "free") +
+        geom_line() +
+        geom_smooth(method = "lm")
+
+options(repr.plot.width=8, repr.plot.height=6)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### So... How do spills develop relative to volume transported?
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+standardized_1
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+standardized_2
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+* Trends are parallel (between volume and miles) for Crude and (mostly) for Refined and Petroleum Products (RPP). But not for Highly Volatile Liquids (HVL).
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* HVL benefited most from the fracking boom - existing pipelines saw a sligthly higher utilization rate. Hence diverging trends are possible.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* The most noteworthy development is that the (standardized) cost of incidents is staying constant, while the (standardized) volume spilled is decreasing.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* Cost here only captures the property damage - which might be negligable.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+* But what really stands out is that it seems improvements are being made for crude, but not so much for RPP and HVL
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* With the higher utilization rate of HVL pipelines, they seem to exhibit more spills per mile, which is covered somewhat by higher throughput.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+---
+
+-> It would be fair to say that these pipelines are not getting safer
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Summary
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+There are different trends for different commodities, and organizations are in different stages of experience with different commodities. These commodities correspond to different, but related technologies. I want to exploit this heterogeneity of technologies and experience for my research. There are also differences between onshore and offshore, but they are not as pronounced as those between commodities. So I might not persue those further, or only superficially. I will focus on onshore.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+In terms of variables, I will probably volume transported (in gallon-miles) more accurately catpures activities. There are some limitations on data availability, but I can cope with those challenges. However, when standardizing by volume being transported, an increase in volume being transported can mask that the same pipeline is experiencing a constant, or growing error rate. The pipelines would appear to become "safer" relative to volume being transported.
+<!-- #endregion -->
