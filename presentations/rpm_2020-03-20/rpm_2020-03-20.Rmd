@@ -441,6 +441,107 @@ Log scale reveals that there is a cost difference betweden HVL and RPP after all
 
 Prominent operators
 
+```{r slideshow={'slide_type': 'subslide'}}
+largest_companies <- pipelines %>%
+    filter(on_offshore == "onshore") %>%
+    filter(commodity %in% c("rpp", "crude", "hvl")) %>%
+    group_by(year, ID) %>%
+    summarize(miles = sum(miles, na.rm = T)) %>%
+    group_by(ID) %>%
+    filter(miles == max(miles)) %>%
+    ungroup() %>%
+    top_n(6, miles) %>%
+    arrange(desc(miles))
+
+largest_companies %>%
+    jupyter_styling(font_size = 14)
+```
+
+```{r}
+add_company_names(31618)
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+operators <- pipelines %>%
+    filter(ID %in% c("31618", "Energy Transfer Partners (Group)", "Kinder Morgan (Group)")) %>%
+    mutate(ID = add_company_names(ID)) %>%
+    filter(on_offshore == "onshore") %>%
+    filter(commodity %in% c("crude", "hvl", "rpp")) %>%
+    group_by(year, commodity, ID) %>%
+    summarize(!!! oildata::pipelines_consolidation) %>%
+    mutate(cost_per_mile = incidents_cost/miles, 
+           cost_per_volume = incidents_cost/estimate_volume_all, 
+           volume_per_mile = incidents_volume/miles,
+           volume_per_volume = incidents_volume/estimate_volume_all) %>%
+    pivot_longer(cols = -c(year, commodity, ID), names_to = "variable", values_to = "value")
+glimpse(operators)
+
+
+options(repr.plot.width=8, repr.plot.height=6)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Volume transported and volume spilled
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'skip'}}
+enterprise_products <- operators %>%
+    filter(ID == "Enterprise Products Operating") %>%
+    filter(variable %in% c("estimate_volume_all", "incidents_volume", "volume_per_volume", "miles")) %>%
+    ggplot(aes(x=year, y=value)) +
+        facet_wrap(commodity ~ variable, nrow = 3, scale = "free") +
+        geom_point() +
+        geom_smooth(method = "lm", se = F) +
+        labs(title = "Enterprise Products Operating", x = NULL, y = NULL)
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+energy_transfer_partners <- operators %>%
+    filter(ID == "Energy Transfer Partners (Group)") %>%
+    filter(variable %in% c("estimate_volume_all", "incidents_volume", "volume_per_volume", "miles")) %>%
+    ggplot(aes(x=year, y=value)) +
+        facet_wrap(commodity ~ variable, nrow = 3, scale = "free") +
+        geom_point() +
+        geom_smooth(method = "lm", se = F) +
+        labs(title = "Energy Transfer Partners", x = NULL, y = NULL)
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+kinder_morgan <- operators %>%
+    filter(ID == "Kinder Morgan (Group)") %>%
+    filter(variable %in% c("estimate_volume_all", "incidents_volume", "volume_per_volume", "miles")) %>%
+    ggplot(aes(x=year, y=value)) +
+        facet_wrap(commodity ~ variable, nrow = 3, scale = "free") +
+        geom_point() +
+        geom_smooth(method = "lm", se = F) +
+        labs(title = "Kinder Morgan", x = NULL, y = NULL)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+enterprise_products
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+energy_transfer_partners
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+kinder_morgan
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+* Shows some trends, but nothing consistent between organizations
+    * First two organizations expand, but Kinder Morgan does not
+    * Enterprise Products Operating expands in HVL, volume increases less fast - good trend
+    * Kinder Morgan scales down HVL and RPP - problems for HVL disappear, but RPP shows bad trend when droppign first two years
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* Raises some questions on the data
+    * Is there data missing for Energy Transfer Partners on crude?
+    * Are there problem pipelines?
+<!-- #endregion -->
+
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
 ## Summary
 <!-- #endregion -->
