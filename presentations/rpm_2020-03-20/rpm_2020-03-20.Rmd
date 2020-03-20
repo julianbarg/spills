@@ -362,7 +362,7 @@ standardized_2
 <!-- #endregion -->
 
 <!-- #region {"slideshow": {"slide_type": "fragment"}} -->
-* The most noteworthy development is that the (standardized) cost of incidents is staying constant, while the (standardized) volume spilled is decreasing.
+* The most noteworthy development is that the (standardized by volume) cost of incidents is staying constant, while the (standardized by volume) volume spilled is decreasing.
 <!-- #endregion -->
 
 <!-- #region {"slideshow": {"slide_type": "fragment"}} -->
@@ -370,7 +370,7 @@ standardized_2
 <!-- #endregion -->
 
 <!-- #region {"slideshow": {"slide_type": "subslide"}} -->
-* But what really stands out is that it seems improvements are being made for crude, but not so much for RPP and HVL
+* But what really stands out is that it seems improvements are being made (in terms of volume spilled per volume transported_ for crude, some for RPP, and almost none for HVL
 <!-- #endregion -->
 
 <!-- #region {"slideshow": {"slide_type": "fragment"}} -->
@@ -384,6 +384,64 @@ standardized_2
 <!-- #endregion -->
 
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## What is the scale of performance difference between commoditites?
+<!-- #endregion -->
+
+Does safety performance converge?
+
+```{r slideshow={'slide_type': 'skip'}}
+options(repr.plot.width=8, repr.plot.height=3.5)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+pipelines_y_c %>%
+    filter(variable == "volume_per_volume") %>%
+    ggplot(aes(x=year, y=value)) + 
+        facet_wrap(~commodity) +
+        geom_line() +
+        geom_smooth(method = "lm") +
+        labs(y = "Gallons of oil spilled per gallon-mile transported")
+```
+
+The divergence in scale might be explained by difference in density. Only for crude is learning obvious.
+
+```{r slideshow={'slide_type': 'subslide'}}
+pipelines_y_c %>%
+    filter(variable == "cost_per_volume") %>%
+    ggplot(aes(x=year, y=value)) + 
+        facet_wrap(~commodity) +
+        geom_line() +
+        geom_smooth(method = "lm") +
+        labs(y = "Property damage in USD per gallon-mile transported")
+```
+
+Only crude incures noteworthy cost. Likely corresponds to legal cost, too. Maybe the motivation for improvements.
+
+```{r slideshow={'slide_type': 'skip'}}
+cost_graph <- pipelines_y_c %>%
+    filter(variable == "cost_per_volume") %>%
+    ggplot(aes(x=year, y=value)) + 
+        facet_wrap(~commodity) +
+        geom_line() +
+        geom_smooth(method = "lm") +
+        labs(y = "Cost of damage by oil spills in USD per gallon-mile transported") +
+        scale_y_log10() +
+        labs(title = "!!! Cost - log scaled !!!")
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+cost_graph
+```
+
+Log scale reveals that there is a cost difference betweden HVL and RPP after all. Maybe explaining why there is less improvements for HVL than for RPP.
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Heterogeneity between organizations
+<!-- #endregion -->
+
+Prominent operators
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
 ## Summary
 <!-- #endregion -->
 
@@ -393,4 +451,16 @@ There are different trends for different commodities, and organizations are in d
 
 <!-- #region {"slideshow": {"slide_type": "fragment"}} -->
 In terms of variables, I will probably volume transported (in gallon-miles) more accurately catpures activities. There are some limitations on data availability, but I can cope with those challenges. However, when standardizing by volume being transported, an increase in volume being transported can mask that the same pipeline is experiencing a constant, or growing error rate. The pipelines would appear to become "safer" relative to volume being transported.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Developments
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* Improvements for crude, some for HVL.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+* Improvements may be driven by cost.
 <!-- #endregion -->
