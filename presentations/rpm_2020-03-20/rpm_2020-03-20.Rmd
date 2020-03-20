@@ -491,29 +491,25 @@ enterprise_products <- operators %>%
     ggplot(aes(x=year, y=value)) +
         facet_wrap(commodity ~ variable, nrow = 3, scale = "free") +
         geom_point() +
-        geom_smooth(method = "lm", se = F) +
+        geom_smooth(method = "lm", se = T) +
         labs(title = "Enterprise Products Operating", x = NULL, y = NULL)
-```
 
-```{r slideshow={'slide_type': 'skip'}}
 energy_transfer_partners <- operators %>%
     filter(ID == "Energy Transfer Partners (Group)") %>%
     filter(variable %in% c("estimate_volume_all", "incidents_volume", "volume_per_volume", "miles")) %>%
     ggplot(aes(x=year, y=value)) +
         facet_wrap(commodity ~ variable, nrow = 3, scale = "free") +
         geom_point() +
-        geom_smooth(method = "lm", se = F) +
+        geom_smooth(method = "lm", se = T) +
         labs(title = "Energy Transfer Partners", x = NULL, y = NULL)
-```
 
-```{r slideshow={'slide_type': 'skip'}}
 kinder_morgan <- operators %>%
     filter(ID == "Kinder Morgan (Group)") %>%
     filter(variable %in% c("estimate_volume_all", "incidents_volume", "volume_per_volume", "miles")) %>%
     ggplot(aes(x=year, y=value)) +
         facet_wrap(commodity ~ variable, nrow = 3, scale = "free") +
         geom_point() +
-        geom_smooth(method = "lm", se = F) +
+        geom_smooth(method = "lm", se = T) +
         labs(title = "Kinder Morgan", x = NULL, y = NULL)
 ```
 
