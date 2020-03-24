@@ -106,7 +106,7 @@ $v_{est\_off} = \frac{miles_{off}}{miles_{on} + miles_{off}} * v_{total}$
 <!-- #endregion -->
 
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
-## How much oil is being transported and spilled?
+## How much oil is being transported?
 <!-- #endregion -->
 
 <!-- #region {"slideshow": {"slide_type": "subslide"}} -->
@@ -199,12 +199,12 @@ grid::grid.draw(volume_miles_on_offshore)
 
 Both offshore pipeline networks and volume transported is dwarfed by onshore.
 
-<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
-### Looking and both onshore and offshore
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## How much oil is being spilled?
 <!-- #endregion -->
 
-<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
-### Incidents
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Looking and both onshore and offshore
 <!-- #endregion -->
 
 ```{r}
@@ -222,8 +222,33 @@ options(repr.plot.width=8, repr.plot.height=6)
 overview_spills
 ```
 
+```{r slideshow={'slide_type': 'skip'}}
+options(repr.plot.width=8, repr.plot.height=4)
+```
+
 <!-- #region {"slideshow": {"slide_type": "subslide"}} -->
-Obviously, this initially looks promising - with the volume being transported increasing, the volume of oil being spilled stays constant.
+**Note: the 2010 incidents does not seem to stand out in terms of spill volume. This also holds true when we look at crude only.**
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'fragment'}}
+pipelines_y_c %>%
+    filter(variable %in% c("incidents_volume", "incidents_cost")) %>%
+    ggplot(aes(x=year, y=value)) + 
+        facet_wrap(variable ~ commodity, scales = "free") +
+        geom_point() + geom_line() +
+        geom_smooth(method = "lm", se = F)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+The reason for the high cost is that this crude oil spilled into a river, which carried the oil with it and necessitated more cleanup. This spill is the Kalamazoo River oil spill. See next section for details.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Takeaways from overview_spills
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+Obviously, the overview graph for spills initially looks promising - with the volume being transported increasing, the volume of oil being spilled stays constant.
 
 ---
 <!-- #endregion -->
@@ -237,8 +262,6 @@ A look at the row offshore immediately reveals a weakness of the dataset: The De
 <!-- #region {"slideshow": {"slide_type": "fragment"}} -->
 Further, the comperison of the three rows reveals that overall, offshore is just a small drop in the bucket. The trends are somewhat parallel (except for the year 2004 for offshore), and onshore far outscales offshore.
 
-There is also a spike in 2009: Kalamazoo River oil spill - second largest in history.
-
 ---
 <!-- #endregion -->
 
@@ -251,7 +274,7 @@ Moving forward, I will analyse the heterogeneity in progress between different c
 <!-- #endregion -->
 
 <!-- #region {"slideshow": {"slide_type": "subslide"}} -->
-### What is that cost spike in 2009 for *onshore*?!
+### What is that cost spike in 2010 for *onshore*?!
 <!-- #endregion -->
 
 ```{r}
