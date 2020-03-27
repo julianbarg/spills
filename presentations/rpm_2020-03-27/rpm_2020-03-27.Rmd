@@ -1,0 +1,221 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.1'
+      jupytext_version: 1.2.1
+  kernelspec:
+    display_name: R 3.6.1
+    language: R
+    name: ir361
+---
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+# Research Progress Meeting 2020-03-27
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+## Issue: determining spill volume
+<!-- #endregion -->
+
+Last week's update has shown some inconsistencies between the incident spill volumes and incident cost. We did not find the relationship that we would expect there to be. In particular, there was a major spill in 2010 that incurred very high cost (Kalamazoo River oil spill); this spill did not stand out in terms of spill volume.
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+I compared this spill to the largest spill (by volume) in the dataset. The largest spill occured when oil spilled from a tank into a containment area - all oil could be recovered. Hence, I compared recovery volume - but the Kalaazoo River oil spill also shows a high recovery volume. My hypothesis is that when the oil was dug up (from the river bed and surrounding soil), the approximated volume was counted toward the recovered volume. Looking at the descriptions of the incidents might allow us to address this issue.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+Also, I want to say that over the weekend, I was not very productive. And then after the Ivey building closed, that was another step back. My usual daily routine consists of leaving my home to go *anywhere* and then work - even if that is a cafe, or just a friends house. I bring this up just to say - *this meeting* really motivated me to focus on my research again, work concentrated on the problems in front of my eyes.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Setup
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+library(tidyverse)
+library(DataAnalysisTools)
+library(oildata)
+```
+
+```{r}
+packageVersion("oildata")
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+glimpse(pipelines)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+glimpse(incidents)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Transformations
+<!-- #endregion -->
+
+```{r}
+pipelines_year <- pipelines %>%
+    filter(commodity %in% c("crude", "hvl", "rpp")) %>%
+    group_by(year, on_offshore) %>%
+    summarize(!!! oildata::pipelines_consolidation) %>%
+    pivot_longer(cols = -c(year, on_offshore), names_to = "variable", values_to = "value")
+
+glimpse(pipelines_year)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+pipelines_y_c <- pipelines %>%
+    filter(on_offshore == "onshore") %>%
+    filter(commodity %in% c("crude", "hvl", "rpp")) %>%
+    group_by(year, commodity) %>%
+    summarize(!!! oildata::pipelines_consolidation) %>%
+    mutate(cost_per_mile = incidents_cost/miles, 
+           cost_per_volume = incidents_cost/estimate_volume_all, 
+           volume_per_mile = incidents_volume/miles,
+           volume_per_volume = incidents_volume/estimate_volume_all,
+           inc_per_mile = incidents/miles, 
+           inc_per_volume = incidents/estimate_volume_all,
+           sign_inc_per_mile = significant_incidents/miles,
+           sign_inc_per_volume = significant_incidents/estimate_volume_all) %>%
+    pivot_longer(cols = -c(year, commodity), names_to = "variable", values_to = "value")
+
+glimpse(pipelines_y_c)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Recap
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'skip'}}
+overview_spills <- pipelines_year %>%
+    filter(on_offshore == "onshore") %>%
+    filter(variable %in% c("incidents_cost", "incidents_volume", "significant_incidents", "estimate_volume_all")) %>%
+    ggplot(aes(x = year, y = value)) +
+        facet_wrap(on_offshore ~ variable, scales = "free", nrow = 1) +
+        geom_line() +
+        geom_smooth(method = "lm", se = FALSE) +
+        scale_y_continuous(limits = c(0, NA)) +
+        labs(x = NULL, y = NULL) 
+
+options(repr.plot.width = 8, repr.plot.height = 2.3)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+overview_spills
+```
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+---
+* More oil is being transported, while the volume of oil being spilled stays constant. 
+* The incident in 2010 has not made a change to the spill volume, or maybe more oil is even being spilled again.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+**Why do the incident cost spike in 2010, but the volume of spills does not?**
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Maybe it is overshadowed by HVL spills, which might be larger in volume?
+<!-- #endregion -->
+
+```{r}
+overview_commodity <- pipelines_y_c %>%
+    filter(variable %in% c("incidents_volume", "incidents_cost")) %>%
+    ggplot(aes(x=year, y=value)) + 
+        facet_wrap(variable ~ commodity, scales = "free") +
+        geom_point() + geom_line() +
+        geom_smooth(method = "lm", se = F) +
+        scale_y_continuous(limits = c(0, NA)) +
+        labs(x = NULL, y = NULL)
+
+options(repr.plot.width=8, repr.plot.height=5)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+overview_commodity
+```
+
+**No, even in crude the year 2010 does not stand out in incidents volume for crude**
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+## Maybe if we look at the net loss...?
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'fragment'}}
+recovery <- pipelines_y_c %>%
+    filter(variable %in% c("incidents_cost", "incidents_volume", "recovered", "net_loss_volume")) %>%
+    ggplot(aes(x=year, y=value)) + 
+        facet_wrap(commodity ~ variable, scales = "free") +
+        geom_point() + geom_line() +
+        geom_smooth(method = "lm", se = F) +
+        scale_y_continuous(limits = c(0, NA)) +
+        labs(x = NULL, y = NULL)
+
+options(repr.plot.width=8, repr.plot.height=6)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+recovery
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+This does not provide a clear picture either. 
+
+* We see that in 2010 a high amount of crude oil had to be recovered, which may ccount for the high incident cost in that year. 
+* But even higher amounts were recovered in 2004 and 2005 without high incident cost.
+* There is no clear relationship between cost, volume spilled and volume recovered for any commodity type.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Looking at individual incidents to understand the discrepancy
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+glimpse(incidents)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+enbridge <- top_n(filter(incidents, commodity != "hvl"), 1, cost_1984)
+select(enbridge, -narrative)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+enbridge$narrative %>%
+    DataAnalysisTools::jupyter_styling(font_size = 14)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+The incident report implies that recovery of oil in this case occured after the oil had already spilled into the river.
+* Oil was recovered by digging up the soil.
+* The volume recovered does not infer that the environmental damage was mitigated. It was recovered after the damage had already occured.
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+most_spilled <- top_n(filter(incidents, commodity != "hvl"), 1, volume)
+select(most_spilled, -narrative)
+```
+
+```{r}
+most_spilled$commodity
+```
+
+```{r}
+most_spilled$narrative
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+most_net_loss <- top_n(filter(incidents, commodity != "hvl"), 1, net_loss)
+select(most_net_loss, -narrative)
+```
+
+```{r}
+most_net_loss$commodity
+```
+
+```{r}
+most_net_loss$narrative
+```
