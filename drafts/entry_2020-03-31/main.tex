@@ -1,0 +1,41 @@
+\documentclass[12pt, man, natbib]{apa6}
+\usepackage[USenglish]{babel}
+\usepackage{setspace}
+
+\title{Entry 2020-03-31 - Data problems}
+\shorttitle{Data problems}
+\author{Julian Barg\\barg.julian@gmail.com}
+\affiliation{Ivey Business School}
+\setcitestyle{authoryear, open={()},close={)},citesep={,},aysep=}
+
+
+% \abstract{}
+
+
+\begin{document}
+	
+	\maketitle
+	
+	\singlespacing
+	
+	\section{}
+	A lot of data has been collected on oil spills by the PHMSA - so much that it is surprising that there have not been written many, many publications about the phenomenon. After all, the phenomenon is attractive - who doesn't think that oil spills ought to be a thing of the past - and metrics such as counts of spills and spill volume seem readily interpretable. Why then has there so little been written about the topic outside the area of engineering?
+	
+	As of the time of this writing, there have been two noteworthy publications outside the area of engineering that use the PHMSA data. \citet{Park2019} analysis the impact of transmission pipeline incidents on operators' relationships with business partners. \citet{Scott2019} analyses whether PHMSA grants for safety initiatives do actually lead to improvements in pipeline safety.
+	
+	Hence, those two take very different approaches than what I aim to do. I am interested in what happens with the oil we transport. How much does spill, what are the environmental impacts, and are there improvements (i.e., a decreasing trend) in the spill volume over time.
+	
+	While \citet{Scott2019} also uses spills as an outcome variable, they are lacking the longitudinal perspective that I am interested in, and they also focus more on fatalities rather than environmental impacts, which affect people's lifes only indirectly. Specifically, I am interested in oil spills that may threaten people's livelihoods, and the viability of localities for human settlement (at least in subjective terms).
+	
+	\section{Issues}
+	There is a good reason why \citet{Scott2019} focuses on transmission distribution pipelines: this data is reported at the state level, so cause and effect can be traced better. I only have the data on a national level. What is more problematic is the outcome variable that I am interested in. Spill volume is \textbf{not} a reliable metric. The oil might be spilled into nature or into a containment area. Both would report their spill volume equally. In the second case, it might be possible to recover the oil without causing any environmental damage. In the second case, PHMSA might require the organization to recover their oil too, e.g., by digging up the ground. Oil recovered in this fashion would be reported in a similar fashion to oil pumped out of a containment area.
+	
+	\section{Approaches}
+	\begin{itemize}
+		\item An alternative level of analysis would be to pick out individual pipelines and observe how those perform over time. One way to facilitate this would be to purposely pick out organizations that represent one pipeline and file one individual report, as Keystone XL might for instance do.
+		\item I could look at gas distribution instead of gas transmission - this describes all those pipelines that transport e.g., propane to individual households. This would result in me losing the environmental story to some extent; an incident in gas distribution may for example be an explosion that destroys a residential building and kills people. The gas itself either burns of or leaks into the atmosphere (where it may act as a climate gas). These leaks to not lead to the water and soil pollution that lead to conflicts with the local populace, such as indigenous people.
+	\end{itemize}
+
+\bibliography{bibliography}
+
+\end{document}
