@@ -1,0 +1,230 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.1'
+      jupytext_version: 1.2.1
+  kernelspec:
+    display_name: R 3.6.1
+    language: R
+    name: ir361
+---
+
+# Research Progress Meeting 2020-04-xx
+
+![Keystone spill 2019](../resources/keystone_1.jpg)
+
+Image:Keystone pipeline leak on Oct 29, 2019. https://www.rawstory.com/2019/11/it-happens-over-and-over-and-over-and-over-keystone-pipeline-leaks-at-least-383000-gallons-of-crude-oil-in-north-dakota/
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Purpose
+
+1. Turn the data on its head - look at the incidents
+2. Look at injuries and fatalities
+<!-- #endregion -->
+
+### Questions
+
+1. Top 10 incidens
+2. How many incidents do we need to care about?
+3. How do the largest incidents fare in terms of net loss and vice versa?
+    * Do we need to look at spill volume, net loss, or both?
+4. What are the largest incidents by decade?
+5. Who are the operators?
+6. What are the (stated) causes of these incidents?
+7. Where are these incidents located?
+
+
+## Setup
+
+```{r slideshow={'slide_type': 'subslide'}}
+library(oildata)
+library(tidyverse)
+library(gridExtra)
+
+packageVersion("oildata")
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+incidents <- subset(incidents, commodity %in% c("hvl", "rpp", "crude"))
+
+glimpse(incidents)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Top 10 incidents
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+There are five relevant metrics for identifying relevant spills:
+1. Volume of commodity spilled
+2. Net loss of commodity
+3. Damage in USD
+4. Number of injuries
+5. Number of fatalities
+
+I will proceed in three steps:
+1. Identify the top 10 spills for each metric individually
+2. Look at the overlap between them
+3. Take a qualitative look at the spills (location, circumstances, causes etc.)
+<!-- #endregion -->
+
+### By spill volume
+
+```{r slideshow={'slide_type': 'subslide'}}
+irrelevant_cols <- quo(-c(narrative, DATAFILE_AS_OF, CAUSE, cost, recovered))
+
+incidents %>%
+    top_n(10, volume) %>%
+    select(!! irrelevant_cols)
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+top_volume <- incidents %>%
+    top_n(10, volume) %>%
+    arrange(desc(volume)) %>%
+    mutate(n = 1:n()) %>%
+    ggplot(aes(n, volume)) + 
+        geom_col(color = "black", fill = "tan") +
+        geom_text(aes(label = paste(name, "-", year)), angle = 90, 
+                  hjust = c(1, rep(0, 9)), nudge_y = c(-1000, rep(1000, 9))) +
+        scale_x_continuous(breaks = 1:10) +
+        labs(x = NULL, y = "Volume spilled (in barrels)")
+
+options(repr.plot.width=8, repr.plot.height=6)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+top_volume
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Other metrics
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'skip'}}
+incidents$name_short <- substr(incidents$name, 1, 15)
+incidents$year_short <- substr(incidents$year, 3, 4)
+
+top_net_loss <- incidents %>%
+    top_n(10, net_loss) %>%
+    arrange(desc(net_loss)) %>%
+    mutate(n = 1:n()) %>%
+    ggplot(aes(n, net_loss)) + 
+        geom_col(color = "black", fill = "tan") +
+        geom_text(aes(label = paste0(name_short, " '", year_short)), angle = 90, 
+                  hjust = c(1, rep(0, 9)), nudge_y = c(-1000, rep(1000, 9))) +
+        labs(x = NULL, y = "Net loss (in barrels)") +
+        theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+
+top_cost <- incidents %>%
+    top_n(10, cost) %>%
+    arrange(desc(cost)) %>%
+    mutate(n = 1:n()) %>%
+    ggplot(aes(n, cost)) + 
+        geom_col(color = "black", fill = "tan") +
+        geom_text(aes(label = paste(name_short, " '", year_short)), angle = 90, 
+                  hjust = c(1, rep(0, 9)), nudge_y = c(-10000000, rep(10000000, 9))) +
+        labs(x = NULL, y = "Net loss (in barrels)") +
+        theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+
+top_injuries <- incidents %>%
+    top_n(10, injuries) %>%
+    arrange(desc(injuries)) %>%
+    mutate(n = 1:n()) %>%
+    ggplot(aes(n, injuries)) + 
+        geom_col(color = "black", fill = "tan") +
+        geom_text(aes(label = paste(name_short, "'", year_short)), angle = 90, 
+                  hjust = c(1, 1, rep(0, 8)), nudge_y = c(-0.05, -0.05, rep(0.05, 8))) +
+        labs(x = NULL, y = "Net loss (in barrels)") +
+        scale_y_log10() +
+        theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+
+top_fatalities <- incidents %>%
+    top_n(10, fatalities) %>%
+    arrange(desc(fatalities)) %>%
+    mutate(n = 1:n()) %>%
+    top_n(10, n) %>%
+    ggplot(aes(n, fatalities)) + 
+        geom_col(color = "black", fill = "tan") +
+        geom_text(aes(label = paste(name_short, "'", year_short)), angle = 90, 
+                  hjust = c(1), nudge_y = c(-0.05)) +
+        labs(x = NULL, y = "Net loss (in barrels)") +
+        theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+
+top_grid <- arrangeGrob(top_net_loss, top_cost, top_injuries, top_fatalities, ncol=2)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+grid::grid.draw(top_grid)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+facet wrap by incidents, show the bar
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## How many incidents should we care about?
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'skip'}}
+top_100_volume <- incidents %>%
+    select(-narrative) %>%
+    arrange(desc(volume)) %>%
+    top_n(100, volume) %>%
+    mutate(n = 1:100) %>%
+    ggplot(aes(n, volume)) +
+        geom_col()
+
+top_100_net_loss <- incidents %>%
+    select(-narrative) %>%
+    arrange(desc(net_loss)) %>%
+    top_n(100, net_loss) %>%
+    mutate(n = 1:100) %>%
+    ggplot(aes(n, net_loss)) +
+        geom_col()
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+top_100_net_loss
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+volume_cumulative_500 <- incidents %>%
+    select(-narrative) %>%
+    arrange(desc(volume)) %>%
+    top_n(500, volume) %>%
+    mutate(n = 1:n(), 
+           volume = cumsum(volume)) %>%
+    ggplot(aes(n, volume)) +
+        geom_col()
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+volume_cumulative_500
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+incidents %>%
+    select(-narrative) %>%
+    arrange(desc(volume)) %>%
+    top_n(100, volume) %>%
+    mutate(n = 1:100) %>%
+    ggplot(aes(n, volume)) +
+        geom_col()
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+incidents %>%
+    select(-narrative) %>%
+    arrange(desc(net_loss)) %>%
+    top_n(10000, net_loss) %>%
+    mutate(n = 1:n(), 
+           volume = cumsum(volume),
+           net_loss = cumsum(net_loss)) %>%
+    ggplot(aes(n, net_loss)) +
+        geom_col()
+```
