@@ -15,9 +15,9 @@ jupyter:
 
 # Research Progress Meeting 2020-04-xx
 
-![Keystone spill 2019](../resources/keystone_1.jpg)
+![Keystone spill 2019](../resources/belle_fourche_1.jpg)
 
-Image:Keystone pipeline leak on Oct 29, 2019. https://www.rawstory.com/2019/11/it-happens-over-and-over-and-over-and-over-keystone-pipeline-leaks-at-least-383000-gallons-of-crude-oil-in-north-dakota/
+Image: Belle Fourche pipeline leak on Dec 05, 2016. https://bismarcktribune.com/news/state-and-regional/oil-spill-in-creek-originally-underestimated-making-it-one-of/article_93c58fa0-3d22-554c-a1ae-cfb08b248aee.html
 
 <!-- #region {"slideshow": {"slide_type": "subslide"}} -->
 ### Purpose
@@ -168,6 +168,94 @@ facet wrap by incidents, show the bar
 
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
 ## How many incidents should we care about?
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'skip'}}
+top_10_volume <- incidents %>%
+    select(-narrative) %>%
+    arrange(desc(volume)) %>%
+    top_n(10, volume) %>%
+    mutate(n = 1:n()) %>%
+    ggplot(aes(n, volume)) +
+        geom_col()
+
+top_100_volume <- incidents %>%
+    select(-narrative) %>%
+    arrange(desc(volume)) %>%
+    top_n(100, volume) %>%
+    mutate(n = 1:n()) %>%
+    ggplot(aes(n, volume)) +
+        geom_col()
+
+top_500_volume <- incidents %>%
+    select(-narrative) %>%
+    arrange(desc(volume)) %>%
+    top_n(500, volume) %>%
+    mutate(n = 1:n()) %>%
+    ggplot(aes(n, volume)) +
+        geom_col()
+
+top_1000_volume <- incidents %>%
+    select(-narrative) %>%
+    arrange(desc(volume)) %>%
+    top_n(500, volume) %>%
+    mutate(n = 1:n()) %>%
+    ggplot(aes(n, volume)) +
+        geom_col()
+
+top_grid_2 <- arrangeGrob(top_10_volume, top_100_volume, top_500_volume, top_1000_volume, ncol=2)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+grid::grid.draw(top_grid_2)
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+cum_10_volume <- incidents %>%
+    select(-narrative) %>%
+    arrange(desc(volume)) %>%
+    top_n(10, volume) %>%
+    mutate(n = 1:n(), 
+           volume = cumsum(volume)) %>%
+    ggplot(aes(n, volume)) +
+        geom_col()
+
+cum_100_volume <- incidents %>%
+    select(-narrative) %>%
+    arrange(desc(volume)) %>%
+    top_n(100, volume) %>%
+    mutate(n = 1:n(), 
+           volume = cumsum(volume)) %>%
+    ggplot(aes(n, volume)) +
+        geom_col()
+
+cum_500_volume <- incidents %>%
+    select(-narrative) %>%
+    arrange(desc(volume)) %>%
+    top_n(500, volume) %>%
+    mutate(n = 1:n(), 
+           volume = cumsum(volume)) %>%
+    ggplot(aes(n, volume)) +
+        geom_col()
+
+cum_1000_volume <- incidents %>%
+    select(-narrative) %>%
+    arrange(desc(volume)) %>%
+    top_n(1000, volume) %>%
+    mutate(n = 1:n(), 
+           volume = cumsum(volume)) %>%
+    ggplot(aes(n, volume)) +
+        geom_col()
+
+cum_grid <- arrangeGrob(cum_10_volume, cum_100_volume, cum_500_volume, cum_1000_volume, ncol=2)
+```
+
+```{r}
+grid::grid.draw(cum_grid)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+
 <!-- #endregion -->
 
 ```{r slideshow={'slide_type': 'skip'}}
