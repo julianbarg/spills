@@ -224,7 +224,9 @@ cum_10_volume <- incidents %>%
     mutate(n = 1:n(), 
            volume = cumsum(volume)) %>%
     ggplot(aes(n, volume)) +
-        geom_col()
+        geom_col() +
+        scale_x_continuous(breaks = 1:10) +
+        labs(x = NULL, y = NULL)
 
 cum_100_volume <- incidents %>%
     select(-narrative) %>%
@@ -233,34 +235,52 @@ cum_100_volume <- incidents %>%
     mutate(n = 1:n(), 
            volume = cumsum(volume)) %>%
     ggplot(aes(n, volume)) +
-        geom_col()
+        geom_col() +
+        labs(x = NULL, y = NULL)
 
 cum_500_volume <- incidents %>%
-    select(-narrative) %>%
-    arrange(desc(volume)) %>%
-    top_n(500, volume) %>%
-    mutate(n = 1:n(), 
-           volume = cumsum(volume)) %>%
-    ggplot(aes(n, volume)) +
-        geom_col()
-
-cum_1000_volume <- incidents %>%
     select(-narrative) %>%
     arrange(desc(volume)) %>%
     top_n(1000, volume) %>%
     mutate(n = 1:n(), 
            volume = cumsum(volume)) %>%
     ggplot(aes(n, volume)) +
-        geom_col()
+        geom_col() +
+        labs(x = NULL, y = NULL)
 
-cum_grid <- arrangeGrob(cum_10_volume, cum_100_volume, cum_500_volume, cum_1000_volume, ncol=2)
+cum_1000_volume <- incidents %>%
+    select(-narrative) %>%
+    arrange(desc(volume)) %>%
+    top_n(10000, volume) %>%
+    mutate(n = 1:n(), 
+           volume = cumsum(volume)) %>%
+    ggplot(aes(n, volume)) +
+        geom_col() +
+        labs(x = NULL, y = NULL)
+
+cum_grid <- arrangeGrob(cum_10_volume, cum_100_volume, cum_500_volume, cum_1000_volume, ncol=2, 
+                        left = "Cumulative volume of commodity spilled (in barrels)", 
+                        bottom = "Oil spills (from largest to smallest)", 
+                        top = "Cumulative spill volume of largest pipeline spills")
 ```
 
 ```{r}
 grid::grid.draw(cum_grid)
 ```
 
+```{r slideshow={'slide_type': 'skip'}}
+ggsave("../../drafts/entry_2020-04-03/cumulative_spill_volume.jpg", cum_grid)
+```
+
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
+
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
 
 <!-- #endregion -->
 
