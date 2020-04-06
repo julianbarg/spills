@@ -37,6 +37,12 @@ Image: Belle Fourche pipeline leak on Dec 05, 2016. https://bismarcktribune.com/
 6. What are the (stated) causes of these incidents?
 7. Where are these incidents located?
 
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Side note
+<!-- #endregion -->
+
+I think the volume of oil transported does not matter. What matters is how long a company operates one pipeline in one area. Whether during that time the pipeline has a high or low utilization rate should not matter (except sometimes when changing between commodities, or when changes occur for other reasons, that might be a source of accidents). Another issue is that higher volume may not be a result of more activity, but rather an indicator of a higher pipe diameter. By the way, more pipeline miles is a good indicator of activity, too, because when a pipeline is temporarily taken of the grid (e.g., for modification work or because a well has fallen dry) the operator may decide not to operate the pipeline in that year and hence not include this pipeline in its report to PHMSA.
+
 
 ## Setup
 
