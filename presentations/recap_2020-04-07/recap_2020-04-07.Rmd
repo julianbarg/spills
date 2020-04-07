@@ -31,10 +31,18 @@ Image: Belle Fourche pipeline leak on Dec 05, 2016. https://bismarcktribune.com/
 <!-- #endregion -->
 
 <!-- #region {"slideshow": {"slide_type": "subslide"}} -->
-**Key question**
+### Key question
 
 * How do I deal with the limitations of the data on the environmental impacts?
 * Since these environmental impacts are what I am interested in.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Approach/work flow
+
+* Diving deeper into the data
+* Developing conceptual ideas
+* Hopefully, these two will meet somewhere
 <!-- #endregion -->
 
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
