@@ -74,9 +74,9 @@ keystone_candidates$lat <- as.numeric(keystone_candidates$lat)
 ```
 
 ```{r}
-# us <- ggmap::get_googlemap("US", zoom = 4)
-# saveRDS(us, "us_map.rds")
-us <- readRDS("us_map.rds")
+us <- ggmap::get_googlemap("US", zoom = 4)
+saveRDS(us, "../resources/us_map.rds")
+us <- readRDS("../resources/us_map.rds")
 
 keystone_operator_spills <- ggmap(us) +
     geom_point(data = keystone_candidates, aes(x=long, y=lat, size = volume), alpha = 0.5)
@@ -109,7 +109,7 @@ Pre-2000 data on pipeline network available from https://www.bts.gov/archive/pub
 <!-- #endregion -->
 
 ```{r slideshow={'slide_type': 'skip'}}
-pre <- readxl::read_excel("table_01_10.xls", skip = 1, na = "U", n_max=6)
+pre <- readxl::read_excel("../resources/pipelines_pre_2000.xls", skip = 1, na = "U", n_max=6)
 pre$`...1` <- c("oil_total", "crude", "rpp", "gas_total", "gas_distribution", "hvl")
 
 head(pre)
