@@ -30,6 +30,13 @@ Image: Belle Fourche pipeline leak on Dec 05, 2016. https://bismarcktribune.com/
 6. Developing empirical questions
 <!-- #endregion -->
 
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+**Key question**
+
+* How do I deal with the limitations of the data on the environmental impacts?
+* Since these environmental impacts are what I am interested in.
+<!-- #endregion -->
+
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
 ## Setup
 <!-- #endregion -->
@@ -37,6 +44,8 @@ Image: Belle Fourche pipeline leak on Dec 05, 2016. https://bismarcktribune.com/
 ```{r slideshow={'slide_type': 'subslide'}}
 library(tidyverse)
 library(oildata)
+library(ggmap)
+library(gridExtra)
 ```
 
 ```{r slideshow={'slide_type': 'subslide'}}
@@ -225,7 +234,7 @@ Same as above - learning may only be evident for crude.
 <!-- #endregion -->
 
 ```{r}
-pre <- readxl::read_excel("table_01_10.xls", skip = 1, na = "U", n_max=6)
+pre <- readxl::read_excel("../resources/pipelines_pre_2000.xls", skip = 1, na = "U", n_max=6)
 pre$`...1` <- c("oil_total", "crude", "rpp", "gas_total", "gas_distribution", "hvl")
 
 head(pre)
@@ -281,9 +290,152 @@ pre_2000_graphed
 ## 5. Next steps - qualitative insights - oil spills
 <!-- #endregion -->
 
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### By individual spills
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'skip'}}
+top_volume <- incidents %>%
+    top_n(10, volume) %>%
+    arrange(desc(volume)) %>%
+    mutate(n = 1:n()) %>%
+    ggplot(aes(n, volume)) + 
+        geom_col(color = "black", fill = "tan") +
+        geom_text(aes(label = paste(name, "-", year)), angle = 90, 
+                  hjust = c(1, rep(0, 9)), nudge_y = c(-1000, rep(1000, 9))) +
+        scale_x_continuous(breaks = 1:10) +
+        labs(x = NULL, y = "Volume spilled (in barrels)")
+
+options(repr.plot.width=8, repr.plot.height=6)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+top_volume
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+incidents$name_short <- substr(incidents$name, 1, 15)
+incidents$year_short <- substr(incidents$year, 3, 4)
+
+top_net_loss <- incidents %>%
+    top_n(10, net_loss) %>%
+    arrange(desc(net_loss)) %>%
+    mutate(n = 1:n()) %>%
+    ggplot(aes(n, net_loss)) + 
+        geom_col(color = "black", fill = "tan") +
+        geom_text(aes(label = paste0(name_short, " '", year_short)), angle = 90, 
+                  hjust = c(1, rep(0, 9)), nudge_y = c(-1000, rep(1000, 9))) +
+        labs(x = NULL, y = "Net loss (in barrels)") +
+        theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+
+top_cost <- incidents %>%
+    top_n(10, cost) %>%
+    arrange(desc(cost)) %>%
+    mutate(n = 1:n()) %>%
+    ggplot(aes(n, cost)) + 
+        geom_col(color = "black", fill = "tan") +
+        geom_text(aes(label = paste(name_short, " '", year_short)), angle = 90, 
+                  hjust = c(1, rep(0, 9)), nudge_y = c(-10000000, rep(10000000, 9))) +
+        labs(x = NULL, y = "Net loss (in barrels)") +
+        theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+
+top_injuries <- incidents %>%
+    top_n(10, injuries) %>%
+    arrange(desc(injuries)) %>%
+    mutate(n = 1:n()) %>%
+    ggplot(aes(n, injuries)) + 
+        geom_col(color = "black", fill = "tan") +
+        geom_text(aes(label = paste(name_short, "'", year_short)), angle = 90, 
+                  hjust = c(1, 1, rep(0, 8)), nudge_y = c(-0.05, -0.05, rep(0.05, 8))) +
+        labs(x = NULL, y = "Net loss (in barrels)") +
+        scale_y_log10() +
+        theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+
+top_fatalities <- incidents %>%
+    top_n(10, fatalities) %>%
+    arrange(desc(fatalities)) %>%
+    mutate(n = 1:n()) %>%
+    top_n(10, n) %>%
+    ggplot(aes(n, fatalities)) + 
+        geom_col(color = "black", fill = "tan") +
+        geom_text(aes(label = paste(name_short, "'", year_short)), angle = 90, 
+                  hjust = c(1), nudge_y = c(-0.05)) +
+        labs(x = NULL, y = "Net loss (in barrels)") +
+        theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+
+top_grid <- arrangeGrob(top_net_loss, top_cost, top_injuries, top_fatalities, ncol=2)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+grid::grid.draw(top_grid)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+**Next step: Picking up the largest incidents here and create spider charts**
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### By individual pipelines
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+keystone_candidates <- subset(incidents_2010, ID == 32334)
+
+keystone_candidates$long <- as.numeric(keystone_candidates$long)
+keystone_candidates$lat <- as.numeric(keystone_candidates$lat)
+
+# maps_key <- readChar("../../maps_key.txt", file.info("../../maps_key.txt")$size)
+# register_google(maps_key)
+# us <- ggmap::get_googlemap("US", zoom = 4)
+# saveRDS(us, "../us_map.rds")
+us <- readRDS("../resources/us_map.rds")
+
+keystone_operator_spills <- ggmap(us) +
+    geom_point(data = keystone_candidates, aes(x=long, y=lat, size = volume), alpha = 0.5)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+keystone_operator_spills
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+<img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Keystone-pipeline-route.svg" alt="Keystone map" style="width:50%"> 
+
+The pipeline - for comparison.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### By learning processes
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+![Leak detection](../resources/keystone_eia_1.png)
+![Leak detection 2](../resources/keystone_eia_2.png)
+
+*Source: Draft Environmental Impact Assessment, DNV Consulting 2006.*
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+![Expected spill frequency](../resources/keystone_eia_3.png)
+
+*Source: Draft Environmnental Impact Assessment, DNV Consulting 2006.*
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "fragment"}} -->
+---
+
+In other words, the operator expects **one significant spill every 7 years** from the get-go. 
+<!-- #endregion -->
+
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
 ## 6. Developing empirical questions
 <!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Backdrop - learning literature
+<!-- #endregion -->
+
+Going steady - especially through latest writing initiative
 
 <!-- #region {"slideshow": {"slide_type": "subslide"}} -->
 ### The problem at hand
