@@ -51,6 +51,7 @@ I think the volume of oil transported does not matter. What matters is how long 
 library(oildata)
 library(tidyverse)
 library(gridExtra)
+library(glue)
 
 packageVersion("oildata")
 ```
@@ -192,7 +193,7 @@ top_10$log_cost <- log(top_10$cost + 1)
 top_10$nickname <- paste0(top_10$name_short, " '", top_10$year_short)
 top_10$nickname <- ifelse(duplicated(top_10$nickname), paste0(top_10$nickname, "b"), top_10$nickname)
 
-relevant_cols <- quos(c(nickname, volume, net_loss, log_cost, log_injuries, fatalities))
+relevant_cols <- quos(c(nickname, incident_ID, volume, net_loss, log_cost, log_injuries, fatalities))
 ```
 
 ```{r slideshow={'slide_type': 'subslide'}}
@@ -204,11 +205,12 @@ head(top_10_scaled)
 
 ```{r slideshow={'slide_type': 'skip'}}
 incident_profiles <- top_10_scaled %>%
-    pivot_longer(-nickname) %>%
+    pivot_longer(-c(nickname, incident_ID)) %>%
     ggplot(aes(x = name, y = value)) +
         geom_col() +
         facet_wrap(~ nickname) +
-        coord_flip()
+        coord_flip() + 
+        labs(y = NULL, x = NULL)
 
 # incident_profiles_1 <- top_10_scaled %>%
 #     slice(1:round(n()/2)) %>%
@@ -229,6 +231,76 @@ incident_profiles <- top_10_scaled %>%
 
 ```{r slideshow={'slide_type': 'subslide'}}
 incident_profiles
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Detailed look at incidents
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Get incident IDs
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'skip'}}
+incident_profiles_ID <- top_10_scaled %>%
+    pivot_longer(-c(nickname, incident_ID)) %>%
+    ggplot(aes(x = name, y = value)) +
+        geom_col() +
+        facet_wrap(incident_ID ~ nickname) +
+        coord_flip() + 
+        labs(y = NULL, x = NULL)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+incident_profiles_ID
+```
+
+```{r slideshow={'slide_type': 'skip'}}
+print_inc <- function(inc) {
+    info <- glue("
+General information
+
+Company name:  {inc$name}
+Commodity:     {inc$commodity}
+Date:          {inc$date}
+Lat/Long:      {inc$long}/{inc$lat}
+State: 
+
+
+
+Outcomes
+
+Spill volume:    {inc$volume}
+Recovered:       {inc$recovered}
+Net loss:        {inc$net_loss}
+Cost (USD 1984): {sprintf('%d', inc$cost)}
+Injuries:        {inc$injuries}
+Fatalities:      {inc$fatalities}
+
+
+
+Causes
+
+Cause (self_selected):     {inc$CAUSE}
+Cause (coded by PHMSA):    {inc$cause}
+Subcause (coded by PHMSA): {inc$MAP_SUBCAUSE}
+
+
+
+Other impact
+Water contamination:
+")
+    print(info)
+} 
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Philips Pipe Line incident '86 (19860159)
+<!-- #endregion -->
+
+```{r}
+inc <- subset(incidents, incident_ID == 19860159)
+print_inc(inc)
 ```
 
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
