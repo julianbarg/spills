@@ -50,37 +50,39 @@ glimpse(incidents)
 
 ```{r slideshow={'slide_type': 'skip'}}
 print_inc <- function(inc) {
+    lat_long <- paste0(inc$long,'/',inc$lat)
+    
     info <- glue("
-General information
-
-Company name:  {inc$name}
-Commodity:     {inc$commodity}
-Date:          {inc$date}
-Lat/Long:      {inc$long}/{inc$lat}
-State:         {inc$state}
-
-
-Outcomes
-
-Spill volume:    {inc$volume}
-Recovered:       {inc$recovered}
-Net loss:        {inc$net_loss}
-Cost (USD 1984): {sprintf('%d', inc$cost)}
-Injuries:        {inc$injuries}
-Fatalities:      {inc$fatalities}
-
-
-Causes
-
-Cause (self_selected):     {inc$CAUSE}
-Cause (coded by PHMSA):    {inc$cause}
-Subcause (coded by PHMSA): {inc$MAP_SUBCAUSE}
-
-
-Other impact
-Water contamination:    {inc$water_contamination}
-Did a fire occur?       {ifelse(inc$fire, 'Yes', 'No')}
-Did an explosion occur? {ifelse(inc$explosion, 'Yes', 'No')}
+General information                          ||  Outcomes
+                                             ||                         
+Company name:   {sprintf('%27s', inc$name)}  ||  Spill volume:   {sprintf('%12.f', inc$volume)}
+Commodity: {sprintf('%32s', inc$commodity)}  ||  Recovered:      {sprintf('%12.f', inc$recovered)}
+Date:           {sprintf('%27s', inc$date)}  ||  Net loss:       {sprintf('%12.f', inc$net_loss)}
+Lat/Long:       {sprintf('%27s', lat_long)}  ||  Cost:           {sprintf('%12.f', inc$cost)}
+State:         {sprintf('%28s', inc$state)}  ||  Cost (USD 1984):{sprintf('%12.f', inc$cost_1984)}
+                                             ||  Injuries:       {sprintf('%12.f', inc$injuries)}
+                                             ||  Fatalities:     {sprintf('%12.f', inc$fatalities)}                                                                
+Causes                                                                 
+                                                                 
+Cause (self_selected):               {inc$CAUSE}                                                                 
+Cause (coded by PHMSA):              {inc$cause}                                                                 
+Subcause (coded by PHMSA):           {inc$subcause}                                                                 
+System that caused the incident:     {inc$system}                                                                 
+Part that caused the incident:       {inc$item}                                                                 
+Year that the part was installed:    {inc$installation_year}                                                                 
+Year that the part was manufactured: {inc$manufacture_year}                                                                 
+                                                                 
+                                                                 
+Other impact                                                               
+                                                                 
+Water contamination:                            {inc$water_contamination}  
+Did a fire occur?                               {inc$fire}                 
+Did an explosion occur?                         {inc$explosion}            
+Need for surface water remediation anticipated? {inc$surface_water_remediation}
+Need for groundwater remediation anticipated?   {inc$groundwater_remediation}
+Need for soil remediation anticipated?          {inc$soil_remediation}
+Need for vegetation remediation anticipated?    {inc$vegetation_remediation}
+Need for wildlife remediation anticipated?      {inc$wildlife_remediation}                                                                 
 ")
     print(info)
 } 
@@ -196,33 +198,17 @@ head(top_10_scaled)
 ```
 
 ```{r slideshow={'slide_type': 'skip'}}
-incident_profiles <- top_10_scaled %>%
+incident_profiles_ID <- top_10_scaled %>%
     pivot_longer(-c(nickname, incident_ID)) %>%
     ggplot(aes(x = name, y = value)) +
         geom_col() +
-        facet_wrap(~ nickname) +
+        facet_wrap(incident_ID ~ nickname) +
         coord_flip() + 
         labs(y = NULL, x = NULL)
-
-# incident_profiles_1 <- top_10_scaled %>%
-#     slice(1:round(n()/2)) %>%
-#     pivot_longer(-nickname) %>%
-#     ggplot(aes(x = name, y = value)) +
-#         geom_col() +
-#         facet_wrap(~ nickname) +
-#         coord_flip()
-
-# incident_profiles_2 <- top_10_scaled %>%
-#     slice((round(n()/2) + 1): n()) %>%
-#     pivot_longer(-nickname) %>%
-#     ggplot(aes(x = name, y = value)) +
-#         geom_col() +
-#         facet_wrap(~ nickname) +
-#         coord_flip()
 ```
 
 ```{r slideshow={'slide_type': 'subslide'}}
-incident_profiles
+incident_profiles_ID
 ```
 
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
@@ -399,3 +385,8 @@ https://www.kiro7.com/news/north-sound-news/on-this-day-olympic-pipeline-explosi
 
 Source: Pipeline Accident Report p.73
 <!-- #endregion -->
+
+```{r slideshow={'slide_type': 'skip'}}
+inc <- subset(incidents, incident_ID == 20020383)
+print_inc(inc)
+```
