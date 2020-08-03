@@ -252,7 +252,7 @@ Source: National Transportation Safety Board report (http://www.pipelinesafetytr
 <!-- #region {"slideshow": {"slide_type": "slide"}} -->
 ### Seminole '92
 
-![Seminole explosion aftermath](https://bloximages.chicago2.vip.townnews.com/theeagle.com/content/tncms/assets/v3/editorial/e/cc/eccb11ba-019b-11e2-a931-0019bb2963f4/50588327704e9.image.jpg?resize=600%2C385)
+![Seminole explosion aftermath](https://bloximages.chicago2.vip.townnews.com/theeagle.com/content/tncms/assets/v3/editorial/e/cc/eccb11ba-019b-11e2-a931-0019bb2963f4/50588327704e9.image.jpg)
 
 Aftermath of the pipeline explosion.
 
@@ -390,3 +390,5 @@ Source: Pipeline Accident Report p.73
 inc <- subset(incidents, incident_ID == 20020383)
 print_inc(inc)
 ```
+
+test
