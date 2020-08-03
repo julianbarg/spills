@@ -13374,7 +13374,7 @@ The following object is masked from ‘package:dplyr’:
 
 
 <div class="output_text output_subarea ">
-<pre>[1] ‘1.1.6’</pre>
+<pre>[1] ‘1.1.8’</pre>
 </div>
 
 </div>
@@ -13408,32 +13408,36 @@ The following object is masked from ‘package:dplyr’:
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Rows: 9,649
-Columns: 25
-$ DATAFILE_AS_OF     <span style="color: rgb(148,148,148)">&lt;dttm&gt;</span> 2020-03-31 04:52:07, 2020-03-31 04:52:07, 2020-03…
-$ significant        <span style="color: rgb(148,148,148)">&lt;lgl&gt;</span> TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TR…
-$ serious            <span style="color: rgb(148,148,148)">&lt;lgl&gt;</span> FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…
-$ incident_ID        <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 19860003, 19860027, 19860028, 19860029, 19860030, …
-$ ID                 <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 22907, 12628, 12628, 18273, 18273, 18718, 15490, 9…
-$ name               <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> &#34;Wyco Pipe Line&#34;, &#34;Mobil Pipeline&#34;, &#34;Mobil Pipelin…
-$ on_offshore        <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> &#34;onshore&#34;, &#34;onshore&#34;, &#34;onshore&#34;, &#34;onshore&#34;, &#34;onsho…
-$ installation_year  <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 1966, 1963, 1926, 1939, 1955, 1956, 1930, 1958, 19…
-$ CAUSE              <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> &#34;OUTSIDE FORCE DAMAGE&#34;, &#34;CORROSION&#34;, &#34;OUTSIDE FORC…
-$ cause              <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> &#34;excavation damage&#34;, &#34;corrosion&#34;, &#34;excavation dama…
-$ MAP_SUBCAUSE       <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> &#34;THIRD PARTY EXCAVATION DAMAGE&#34;, &#34;INTERNAL&#34;, &#34;THIR…
-$ fatalities         <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ injuries           <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ cost               <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 57000, 0, 0, 0, 0, 0, 0, 0, 3000, 50000, 45453, 40…
-$ cost_1984          <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 53949.9012, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000…
-$ TOTAL_COST_CURRENT <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 115187.2868, 0.0000, 0.0000, 0.0000, 0.0000, 0.000…
-$ commodity          <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> &#34;rpp&#34;, &#34;crude&#34;, &#34;rpp&#34;, &#34;crude&#34;, &#34;crude&#34;, &#34;rpp&#34;, &#34;c…
-$ volume             <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 1175, 400, 164, 200, 3000, 3589, 1300, 970, 300, 5…
-$ recovered          <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 4, 350, 87, 150, 2999, 0, 212, 820, 200, 110, 0, 2…
-$ narrative          <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> NA, &#34;Crude oil was discovered leaking from the bot…
-$ net_loss           <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 1171, 50, 77, 50, 1, 3589, 1088, 150, 100, 390, 11…
-$ year               <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 1986, 1986, 1986, 1986, 1986, 1986, 1986, 1986, 19…
-$ date               <span style="color: rgb(148,148,148)">&lt;date&gt;</span> 1986-01-05, 1986-01-29, 1986-01-14, 1986-02-06, 1…
-$ long               <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
-$ lat                <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+Columns: 29
+$ DATAFILE_AS_OF      <span style="color: rgb(148,148,148)">&lt;dttm&gt;</span> 2020-03-31 04:52:07, 2020-03-31 04:52:07, 2020-0…
+$ significant         <span style="color: rgb(148,148,148)">&lt;lgl&gt;</span> TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, T…
+$ serious             <span style="color: rgb(148,148,148)">&lt;lgl&gt;</span> FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, …
+$ incident_ID         <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 19860003, 19860027, 19860028, 19860029, 19860030,…
+$ ID                  <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 22907, 12628, 12628, 18273, 18273, 18718, 15490, …
+$ name                <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> &#34;Wyco Pipe Line&#34;, &#34;Mobil Pipeline&#34;, &#34;Mobil Pipeli…
+$ state               <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> &#34;CO&#34;, &#34;TX&#34;, &#34;TX&#34;, &#34;TX&#34;, &#34;TX&#34;, &#34;NJ&#34;, &#34;TX&#34;, &#34;KS&#34;, &#34;…
+$ on_offshore         <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> &#34;onshore&#34;, &#34;onshore&#34;, &#34;onshore&#34;, &#34;onshore&#34;, &#34;onsh…
+$ installation_year   <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 1966, 1963, 1926, 1939, 1955, 1956, 1930, 1958, 1…
+$ CAUSE               <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> &#34;OUTSIDE FORCE DAMAGE&#34;, &#34;CORROSION&#34;, &#34;OUTSIDE FOR…
+$ cause               <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> &#34;excavation damage&#34;, &#34;corrosion&#34;, &#34;excavation dam…
+$ MAP_SUBCAUSE        <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> &#34;THIRD PARTY EXCAVATION DAMAGE&#34;, &#34;INTERNAL&#34;, &#34;THI…
+$ fatalities          <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ injuries            <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ cost                <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 57000, 0, 0, 0, 0, 0, 0, 0, 3000, 50000, 45453, 4…
+$ cost_1984           <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 53949.9012, 0.0000, 0.0000, 0.0000, 0.0000, 0.000…
+$ TOTAL_COST_CURRENT  <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 115187.2868, 0.0000, 0.0000, 0.0000, 0.0000, 0.00…
+$ commodity           <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> &#34;rpp&#34;, &#34;crude&#34;, &#34;rpp&#34;, &#34;crude&#34;, &#34;crude&#34;, &#34;rpp&#34;, &#34;…
+$ volume              <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 1175, 400, 164, 200, 3000, 3589, 1300, 970, 300, …
+$ recovered           <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 4, 350, 87, 150, 2999, 0, 212, 820, 200, 110, 0, …
+$ fire                <span style="color: rgb(148,148,148)">&lt;lgl&gt;</span> FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, F…
+$ explosion           <span style="color: rgb(148,148,148)">&lt;lgl&gt;</span> FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, F…
+$ narrative           <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> NA, &#34;Crude oil was discovered leaking from the bo…
+$ net_loss            <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 1171, 50, 77, 50, 1, 3589, 1088, 150, 100, 390, 1…
+$ year                <span style="color: rgb(148,148,148)">&lt;dbl&gt;</span> 1986, 1986, 1986, 1986, 1986, 1986, 1986, 1986, 1…
+$ date                <span style="color: rgb(148,148,148)">&lt;date&gt;</span> 1986-01-05, 1986-01-29, 1986-01-14, 1986-02-06, …
+$ long                <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ lat                 <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ water_contamination <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
 </pre>
 </div>
 </div>
@@ -13505,22 +13509,22 @@ $ lat                <span style="color: rgb(148,148,148)">&lt;chr&gt;</span> NA
 
 <div class="output_html rendered_html output_subarea ">
 <table>
-<caption>A tibble: 10 × 20</caption>
+<caption>A tibble: 10 × 24</caption>
 <thead>
-	<tr><th scope=col>significant</th><th scope=col>serious</th><th scope=col>incident_ID</th><th scope=col>ID</th><th scope=col>name</th><th scope=col>on_offshore</th><th scope=col>installation_year</th><th scope=col>cause</th><th scope=col>MAP_SUBCAUSE</th><th scope=col>fatalities</th><th scope=col>injuries</th><th scope=col>cost_1984</th><th scope=col>TOTAL_COST_CURRENT</th><th scope=col>commodity</th><th scope=col>volume</th><th scope=col>net_loss</th><th scope=col>year</th><th scope=col>date</th><th scope=col>long</th><th scope=col>lat</th></tr>
-	<tr><th scope=col>&lt;lgl&gt;</th><th scope=col>&lt;lgl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;date&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th></tr>
+	<tr><th scope=col>significant</th><th scope=col>serious</th><th scope=col>incident_ID</th><th scope=col>ID</th><th scope=col>name</th><th scope=col>state</th><th scope=col>on_offshore</th><th scope=col>installation_year</th><th scope=col>cause</th><th scope=col>MAP_SUBCAUSE</th><th scope=col>⋯</th><th scope=col>commodity</th><th scope=col>volume</th><th scope=col>fire</th><th scope=col>explosion</th><th scope=col>net_loss</th><th scope=col>year</th><th scope=col>date</th><th scope=col>long</th><th scope=col>lat</th><th scope=col>water_contamination</th></tr>
+	<tr><th scope=col>&lt;lgl&gt;</th><th scope=col>&lt;lgl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>⋯</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;lgl&gt;</th><th scope=col>&lt;lgl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;date&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th></tr>
 </thead>
 <tbody>
-	<tr><td>TRUE</td><td> TRUE</td><td>19860159</td><td>15490</td><td>Phillips Pipe Line               </td><td>onshore</td><td>1939</td><td>all other causes           </td><td>MISCELLANEOUS                                    </td><td>0</td><td>26</td><td>  473244.748</td><td> 1010414.80</td><td>rpp  </td><td> 55000</td><td>    NA</td><td>1986</td><td>1986-09-03</td><td>NA          </td><td>NA        </td></tr>
-	<tr><td>TRUE</td><td>FALSE</td><td>19870101</td><td>12452</td><td>Mid - America Pipeline Co (Mapco)</td><td>onshore</td><td>1967</td><td>all other causes           </td><td>MISCELLANEOUS                                    </td><td>0</td><td> 0</td><td>       0.000</td><td>       0.00</td><td>hvl  </td><td>122000</td><td>122000</td><td>1987</td><td>1987-04-03</td><td>NA          </td><td>NA        </td></tr>
-	<tr><td>TRUE</td><td>FALSE</td><td>19890091</td><td>11169</td><td>Lakehead Pipe Line               </td><td>onshore</td><td>1965</td><td>material/weld/equip failure</td><td>UNSPECIFIED PIPE BODY OR SEAM                    </td><td>0</td><td> 0</td><td> 1292756.704</td><td> 2760137.34</td><td>crude</td><td> 31300</td><td> 22300</td><td>1989</td><td>1989-07-12</td><td>NA          </td><td>NA        </td></tr>
-	<tr><td>TRUE</td><td>FALSE</td><td>19910057</td><td>11169</td><td>Lakehead Pipe Line               </td><td>onshore</td><td>1967</td><td>all other causes           </td><td>MISCELLANEOUS                                    </td><td>0</td><td> 0</td><td>11559914.712</td><td>24681328.05</td><td>crude</td><td> 40500</td><td>   700</td><td>1991</td><td>1991-03-02</td><td>NA          </td><td>NA        </td></tr>
-	<tr><td>TRUE</td><td>FALSE</td><td>19980095</td><td>18214</td><td>The Shamrock Pipe Line           </td><td>onshore</td><td>1979</td><td>all other causes           </td><td>MISCELLANEOUS                                    </td><td>0</td><td> 0</td><td>    6434.727</td><td>   13738.65</td><td>crude</td><td> 32903</td><td>   297</td><td>1998</td><td>1998-05-13</td><td>NA          </td><td>NA        </td></tr>
-	<tr><td>TRUE</td><td>FALSE</td><td>20020383</td><td> 2731</td><td>Chevron Pipeline                 </td><td>onshore</td><td>1966</td><td>corrosion                  </td><td>EXTERNAL                                         </td><td>0</td><td> 0</td><td>  365175.296</td><td>  779678.01</td><td>hvl  </td><td> 33010</td><td> 33010</td><td>2002</td><td>2002-10-23</td><td>NA          </td><td>NA        </td></tr>
-	<tr><td>TRUE</td><td>FALSE</td><td>20060071</td><td>31476</td><td>Semcrude                         </td><td>onshore</td><td>1930</td><td>corrosion                  </td><td>INTERNAL                                         </td><td>0</td><td> 0</td><td>  413417.510</td><td>  882678.93</td><td>crude</td><td> 49000</td><td>   100</td><td>2006</td><td>2006-02-19</td><td>31.59494    </td><td>58.68900  </td></tr>
-	<tr><td>TRUE</td><td>FALSE</td><td>20080020</td><td>31684</td><td>Conocophillips                   </td><td>onshore</td><td>1948</td><td>material/weld/equip failure</td><td>PIPE SEAM                                        </td><td>0</td><td> 0</td><td> 3734417.150</td><td> 7973274.64</td><td>crude</td><td> 31322</td><td> 30991</td><td>2008</td><td>2008-01-06</td><td>W102'57211  </td><td>N3303001  </td></tr>
-	<tr><td>TRUE</td><td>FALSE</td><td>20150071</td><td>31618</td><td>Enterprise Products Operating    </td><td>onshore</td><td>2013</td><td>material/weld/equip failure</td><td>CONSTRUCTION, INSTALLATION OR FABRICATION-RELATED</td><td>0</td><td> 0</td><td> 3466805.478</td><td> 7401902.65</td><td>hvl  </td><td> 30565</td><td> 30565</td><td>2015</td><td>2015-01-26</td><td>-80.584594  </td><td>40.366817 </td></tr>
-	<tr><td>TRUE</td><td> TRUE</td><td>20180382</td><td>31130</td><td>Dcp Midstream                    </td><td>onshore</td><td>2013</td><td>damage                     </td><td>THIRD PARTY EXCAVATION DAMAGE                    </td><td>0</td><td> 2</td><td> 7263753.400</td><td>15508685.40</td><td>hvl  </td><td> 48400</td><td> 48400</td><td>2018</td><td>2018-11-10</td><td>-100.5817917</td><td>30.3515556</td></tr>
+	<tr><td>TRUE</td><td> TRUE</td><td>19860159</td><td>15490</td><td>Phillips Pipe Line               </td><td>IN</td><td>onshore</td><td>1939</td><td>all other causes           </td><td>MISCELLANEOUS                                    </td><td>⋯</td><td>rpp  </td><td> 55000</td><td>FALSE</td><td>FALSE</td><td>    NA</td><td>1986</td><td>1986-09-03</td><td>NA          </td><td>NA        </td><td>NA</td></tr>
+	<tr><td>TRUE</td><td>FALSE</td><td>19870101</td><td>12452</td><td>Mid - America Pipeline Co (Mapco)</td><td>IA</td><td>onshore</td><td>1967</td><td>all other causes           </td><td>MISCELLANEOUS                                    </td><td>⋯</td><td>hvl  </td><td>122000</td><td> TRUE</td><td>FALSE</td><td>122000</td><td>1987</td><td>1987-04-03</td><td>NA          </td><td>NA        </td><td>NA</td></tr>
+	<tr><td>TRUE</td><td>FALSE</td><td>19890091</td><td>11169</td><td>Lakehead Pipe Line               </td><td>ND</td><td>onshore</td><td>1965</td><td>material/weld/equip failure</td><td>UNSPECIFIED PIPE BODY OR SEAM                    </td><td>⋯</td><td>crude</td><td> 31300</td><td>FALSE</td><td>FALSE</td><td> 22300</td><td>1989</td><td>1989-07-12</td><td>NA          </td><td>NA        </td><td>NA</td></tr>
+	<tr><td>TRUE</td><td>FALSE</td><td>19910057</td><td>11169</td><td>Lakehead Pipe Line               </td><td>MN</td><td>onshore</td><td>1967</td><td>all other causes           </td><td>MISCELLANEOUS                                    </td><td>⋯</td><td>crude</td><td> 40500</td><td>FALSE</td><td>FALSE</td><td>   700</td><td>1991</td><td>1991-03-02</td><td>NA          </td><td>NA        </td><td>NA</td></tr>
+	<tr><td>TRUE</td><td>FALSE</td><td>19980095</td><td>18214</td><td>The Shamrock Pipe Line           </td><td>TX</td><td>onshore</td><td>1979</td><td>all other causes           </td><td>MISCELLANEOUS                                    </td><td>⋯</td><td>crude</td><td> 32903</td><td>FALSE</td><td>FALSE</td><td>   297</td><td>1998</td><td>1998-05-13</td><td>NA          </td><td>NA        </td><td>NA</td></tr>
+	<tr><td>TRUE</td><td>FALSE</td><td>20020383</td><td> 2731</td><td>Chevron Pipeline                 </td><td>TX</td><td>onshore</td><td>1966</td><td>corrosion                  </td><td>EXTERNAL                                         </td><td>⋯</td><td>hvl  </td><td> 33010</td><td> TRUE</td><td> TRUE</td><td> 33010</td><td>2002</td><td>2002-10-23</td><td>NA          </td><td>NA        </td><td>NO</td></tr>
+	<tr><td>TRUE</td><td>FALSE</td><td>20060071</td><td>31476</td><td>Semcrude                         </td><td>OK</td><td>onshore</td><td>1930</td><td>corrosion                  </td><td>INTERNAL                                         </td><td>⋯</td><td>crude</td><td> 49000</td><td>FALSE</td><td>FALSE</td><td>   100</td><td>2006</td><td>2006-02-19</td><td>31.59494    </td><td>58.68900  </td><td>NO</td></tr>
+	<tr><td>TRUE</td><td>FALSE</td><td>20080020</td><td>31684</td><td>Conocophillips                   </td><td>TX</td><td>onshore</td><td>1948</td><td>material/weld/equip failure</td><td>PIPE SEAM                                        </td><td>⋯</td><td>crude</td><td> 31322</td><td>FALSE</td><td>FALSE</td><td> 30991</td><td>2008</td><td>2008-01-06</td><td>W102'57211  </td><td>N3303001  </td><td>NO</td></tr>
+	<tr><td>TRUE</td><td>FALSE</td><td>20150071</td><td>31618</td><td>Enterprise Products Operating    </td><td>WV</td><td>onshore</td><td>2013</td><td>material/weld/equip failure</td><td>CONSTRUCTION, INSTALLATION OR FABRICATION-RELATED</td><td>⋯</td><td>hvl  </td><td> 30565</td><td> TRUE</td><td> TRUE</td><td> 30565</td><td>2015</td><td>2015-01-26</td><td>-80.584594  </td><td>40.366817 </td><td>NO</td></tr>
+	<tr><td>TRUE</td><td> TRUE</td><td>20180382</td><td>31130</td><td>Dcp Midstream                    </td><td>TX</td><td>onshore</td><td>2013</td><td>damage                     </td><td>THIRD PARTY EXCAVATION DAMAGE                    </td><td>⋯</td><td>hvl  </td><td> 48400</td><td> TRUE</td><td>FALSE</td><td> 48400</td><td>2018</td><td>2018-11-10</td><td>-100.5817917</td><td>30.3515556</td><td>NO</td></tr>
 </tbody>
 </table>
 
@@ -18201,16 +18205,25 @@ height=360
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Philips-Pipe-Line-incident-'86-(19860159)">Philips Pipe Line incident '86 (19860159)<a class="anchor-link" href="#Philips-Pipe-Line-incident-'86-(19860159)">&#182;</a></h3>
+<h3 id="San-Bernadino-train-disaster---gas-explosion">San Bernadino train disaster - gas explosion<a class="anchor-link" href="#San-Bernadino-train-disaster---gas-explosion">&#182;</a></h3>
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/e/eb/Duffy_St._train_disaster_San_Bernardino_California_May_12_1989.jpg" width=80%/></p>
+<p>The pipeline exploded 13 days after the train derailment. Damage to the pipeline had possibly resulted from the cleanup work.</p>
+
+</div>
+</div>
+</div></section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-r"><pre><span></span><span class="n">inc</span> <span class="o">&lt;-</span> <span class="nf">subset</span><span class="p">(</span><span class="n">incidents</span><span class="p">,</span> <span class="n">incident_ID</span> <span class="o">==</span> <span class="m">19860159</span><span class="p">)</span>
+<div class=" highlight hl-r"><pre><span></span><span class="n">inc</span> <span class="o">&lt;-</span> <span class="nf">subset</span><span class="p">(</span><span class="n">incidents</span><span class="p">,</span> <span class="n">incident_ID</span> <span class="o">==</span> <span class="m">19890074</span><span class="p">)</span>
 <span class="nf">print_inc</span><span class="p">(</span><span class="n">inc</span><span class="p">)</span>
 </pre></div>
 
@@ -18230,23 +18243,159 @@ height=360
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>General information
 
-Company name:  Phillips Pipe Line
+Company name:  Calnev Pipeline
 Commodity:     rpp
-Date:          1986-09-03
+Date:          1989-05-24
 Lat/Long:      NA/NA
-State: 
-
+State:         CA
 
 
 Outcomes
 
-Spill volume:    55000
-Recovered:       NA
-Net loss:        NA
-Cost (USD 1984): 500000
-Injuries:        26
-Fatalities:      0
+Spill volume:    0
+Recovered:       0
+Net loss:        0
+Cost (USD 1984): 0
+Injuries:        31
+Fatalities:      2
 
+
+Causes
+
+Cause (self_selected):     OUTSIDE FORCE DAMAGE
+Cause (coded by PHMSA):    excavation damage
+Subcause (coded by PHMSA): THIRD PARTY EXCAVATION DAMAGE
+
+
+Other impact
+Water contamination:    NA
+Did a fire occur?       Yes
+Did an explosion occur? No
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-r"><pre><span></span><span class="n">inc</span><span class="o">$</span><span class="n">narrative</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style=white-space:pre-wrap>'A southern pacific rairoad train derailed on may 12, 1989 at the site of thesubsequent pipeline rupture.  The pipeline was shut down during the clean-upoperations.  Clean-up was monitored by pipeline personnel and the pipeline excavated and inspected at several locations.  The line was restarted on may 16.  On may 25, 1989, during stable pipeline operations, the pipeline rupturedspilling gasoline and causing a fire.'</span>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Incident-description---San-Bernadino-train-disaster">Incident description - San Bernadino train disaster<a class="anchor-link" href="#Incident-description---San-Bernadino-train-disaster">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This pipeline spill is related to the San Bernadino train disaster. The train derailment immediately caused four deaths. According to the incident report by the National Transportation Safety Board, the pipeline ruptured 13 days after the incident. When it did, a fountain of gasoline shot out of the pipeline, and this fountain engulfed in flames. This fountain reportedly stood 10 feet higher than the rooftops of the village. The surrounding houses were doused in gasoline and burned down, two residents were burned alive.</p>
+<p>Also of notice:</p>
+<ul>
+<li>The reported metrics, which report that despite the two deaths, no oil was spilled and no damage cause, are obviously not correct.</li>
+<li>The incident report also touches on the cause of the pipeline incident.<ul>
+<li>Was the pipeline damaged even before the disaster? It was most likely damaged after the disaster during the clean up.</li>
+<li>The person on duty attempted to start a pump multiple times within three minutes before he was informed of the fire by a San Bernadino official.</li>
+<li>Was the pipeline improperly reopened? It was inspected after the disaster.</li>
+<li>The cost of the rupture is reported as \$453,433 for the damage to the houses, \\$300,000 for the loss of gasoline, \$500,000 for repairing the pipelin, and \\$1,060,000 for environmental cleanup (p. 39).</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>Source: National Transportation Safety Board report (<a href="http://www.pipelinesafetytrust.com/docs/ntsb_doc26.pdf">http://www.pipelinesafetytrust.com/docs/ntsb_doc26.pdf</a>)</p>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Seminole-'92">Seminole '92<a class="anchor-link" href="#Seminole-'92">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="https://bloximages.chicago2.vip.townnews.com/theeagle.com/content/tncms/assets/v3/editorial/e/cc/eccb11ba-019b-11e2-a931-0019bb2963f4/50588327704e9.image.jpg?resize=600%2C385" alt="Seminole explosion aftermath"></p>
+<p>Aftermath of the pipeline explosion.</p>
+<p>Source: <a href="https://www.theeagle.com/townnews/commerce/salt-dome-explosion-20-years-later/article_cab6128c-019b-11e2-8e7e-0019bb2963f4.html">https://www.theeagle.com/townnews/commerce/salt-dome-explosion-20-years-later/article_cab6128c-019b-11e2-8e7e-0019bb2963f4.html</a></p>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-r"><pre><span></span><span class="n">inc</span> <span class="o">&lt;-</span> <span class="nf">subset</span><span class="p">(</span><span class="n">incidents</span><span class="p">,</span> <span class="n">incident_ID</span> <span class="o">==</span> <span class="m">19920109</span><span class="p">)</span>
+<span class="nf">print_inc</span><span class="p">(</span><span class="n">inc</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>General information
+
+Company name:  Seminole Pipeline
+Commodity:     hvl
+Date:          1992-04-06
+Lat/Long:      NA/NA
+State:         TX
+
+
+Outcomes
+
+Spill volume:    0
+Recovered:       0
+Net loss:        0
+Cost (USD 1984): 0
+Injuries:        20
+Fatalities:      3
 
 
 Causes
@@ -18256,9 +18405,10 @@ Cause (coded by PHMSA):    all other causes
 Subcause (coded by PHMSA): MISCELLANEOUS
 
 
-
 Other impact
-Water contamination:
+Water contamination:    NA
+Did a fire occur?       Yes
+Did an explosion occur? Yes
 </pre>
 </div>
 </div>
@@ -18266,6 +18416,208 @@ Water contamination:
 </div>
 </div>
 
+</div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-r"><pre><span></span><span class="n">inc</span><span class="o">$</span><span class="n">narrative</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style=white-space:pre-wrap>'((Death and injury information based upon media reports)).  An explosion andfire occurred in the area around seminole pipeline company\'s brenham station.  This incident is currently under investigation by the national transportation safety board to determine the cause.'</span>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Source: <a href="https://www.nytimes.com./1992/04/08/us/gas-explosion-tears-through-texas-pastures.html">https://www.nytimes.com./1992/04/08/us/gas-explosion-tears-through-texas-pastures.html</a></p>
+<ul>
+<li>"Several homes were left in shambles one to two miles from the explosion and rolling pasture was charred."</li>
+<li>"[F]our or five homes were destroyed", meaning that the cost was almost certainly not zero.</li>
+<li>There were also at least 17 animals such as cows and donkeys.</li>
+<li>Some residents were warned a few minutes ahead of time, when the company detected the leak.</li>
+</ul>
+<p>Source: <a href="https://www.theeagle.com/townnews/commerce/salt-dome-explosion-20-years-later/article_cab6128c-019b-11e2-8e7e-0019bb2963f4.html">https://www.theeagle.com/townnews/commerce/salt-dome-explosion-20-years-later/article_cab6128c-019b-11e2-8e7e-0019bb2963f4.html</a></p>
+<ul>
+<li>The residents were not aware that there was a gas storage facility (a salt dome) in their community.</li>
+<li>The worker on duty relied on the safety equipment.</li>
+<li>The safety equipment was faulty, and the cavern overfilled.</li>
+<li>"[G]overnment indifference was part of the problem. It took five years, but finally the U.S. Department of Transportation Pipeline and Hazardous Materials Safety Administration issued an advisory to operators of gas and hazardous liquid underground storage facilities: Henceforth, they were were required to create design guidelines and operation guidelines for salt domes, efforts that long ago should have been made mandatory."</li>
+</ul>
+<hr>
+<ul>
+<li>I sense a theme of (older? pre-2002?) incident reports being incomplete.</li>
+</ul>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Hurricane-Rosa-(1994)">Hurricane Rosa (1994)<a class="anchor-link" href="#Hurricane-Rosa-(1994)">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="https://pubs.usgs.gov/of/2003/ofr03-193/cd_files/USGS_Storms/photos/USGS_78.jpg" width=70%/></p>
+<p>Source: <a href="https://www.houstonchronicle.com/news/houston-texas/houston/article/Houston-no-stranger-to-chemical-plant-fires-13697557.php#photo-17090239">https://www.houstonchronicle.com/news/houston-texas/houston/article/Houston-no-stranger-to-chemical-plant-fires-13697557.php#photo-17090239</a>. A video of the fire can be seen at <a href="https://abc13.com/river-fire-flood-san-jacinto-on/1563118/">https://abc13.com/river-fire-flood-san-jacinto-on/1563118/</a>.</p>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="https://s.hdnux.com/photos/01/01/14/32/17090239/3/940x0.jpg" width=45%/></p>
+<p>Source: <a href="https://www.houstonchronicle.com/news/houston-texas/houston/article/Houston-no-stranger-to-chemical-plant-fires-13697557.php#photo-17090239">https://www.houstonchronicle.com/news/houston-texas/houston/article/Houston-no-stranger-to-chemical-plant-fires-13697557.php#photo-17090239</a>.</p>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-r"><pre><span></span><span class="n">inc</span> <span class="o">&lt;-</span> <span class="nf">subset</span><span class="p">(</span><span class="n">incidents</span><span class="p">,</span> <span class="n">incident_ID</span> <span class="o">==</span> <span class="m">19940236</span><span class="p">)</span>
+<span class="nf">print_inc</span><span class="p">(</span><span class="n">inc</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>General information
+
+Company name:  Colonial Pipeline
+Commodity:     rpp
+Date:          1994-10-19
+Lat/Long:      NA/NA
+State:         TX
+
+
+Outcomes
+
+Spill volume:    20000
+Recovered:       0
+Net loss:        20000
+Cost (USD 1984): 10000000
+Injuries:        925
+Fatalities:      0
+
+
+Causes
+
+Cause (self_selected):     OUTSIDE FORCE DAMAGE
+Cause (coded by PHMSA):    natural force damage
+Subcause (coded by PHMSA): HEAVY RAINS/FLOODS
+
+
+Other impact
+Water contamination:    NA
+Did a fire occur?       Yes
+Did an explosion occur? No
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-r"><pre><span></span><span class="n">inc</span><span class="o">$</span><span class="n">narrative</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+'On thursday, october 20, 1994, a pressure drop and significant rate increaseon line 01, were noted at houston station by the local station operator and by the line controller in atlanta,ga at approximately 0831 cdt. The line was immediately shut down and company personnel began searching for a possible leak. Personnel were also dispatched to close block valves between houston station and shiloh station. At 0937 cdt gasoline was found in a new channel created by flood waters of the san jacinto river, approximately 12.5 miles downstream of houston station. The pipeline was severed near the west bank of the new channel. Shortly after the discovery of the location of the leak, the gasoline fumes ignited near the river road area of channelview, tx. Telephonic notice was made to the nrc at 0924 cdt on 10/20/1994, report no. 266190. It is estimated that 20,000 barrels of gasoline escaped from the severed pipeline, all of which was consumed by the fire or lost to evaporation. While at the present time the estimated total property damages are undetermined,the combined costs for the line 01, line 02 and the texaco crude oil line breaks are expected to exceed $10,000,000. This incident is under investigation by the ntsb. The number of person (1851) injuried is a combined total with line 02 break and texaco crude oil line see report #940237 for line 2 information.'
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>The high number stems from the fact that smoke filled a residential area.</li>
+<li>After the incident, Colonial Pipeline crossed the river with a new pipeline, that was burried 30 feet below the river bed. Reports do not indicate that pipelines in other places were replaced.</li>
+</ul>
+<p>Based on the Pipeline Special Investigation Report:</p>
+<ul>
+<li>547 people received "mostly minor" (p. V) burn and inhalation injuries.</li>
+<li>Takeaways: "need for effective operational monitoring of pipelines and for the use of remote- or automatic-operated valves" (p. 1).</li>
+</ul>
+<p>Sidenote:</p>
+<ul>
+<li>No major pipeline damage was reported after Hurricane Harvey in 2017.</li>
+</ul>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Others">Others<a class="anchor-link" href="#Others">&#182;</a></h3>
+</div>
+</div>
 </div></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
@@ -18276,7 +18628,7 @@ Water contamination:
 </div></section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="n">grid</span><span class="o">::</span><span class="nf">grid.draw</span><span class="p">(</span><span class="n">top_grid_2</span><span class="p">)</span>
@@ -18611,7 +18963,7 @@ height=360
 </div></section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="n">grid</span><span class="o">::</span><span class="nf">grid.draw</span><span class="p">(</span><span class="n">cum_grid</span><span class="p">)</span>
