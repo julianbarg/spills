@@ -332,3 +332,4 @@ vignettes/*.pdf
 maps_key.txt
 .notes
 .dbj
+.temp

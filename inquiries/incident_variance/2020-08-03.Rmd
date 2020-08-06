@@ -1,0 +1,448 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,md,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.1'
+      jupytext_version: 1.2.1
+  kernelspec:
+    display_name: R 3.6.1
+    language: R
+    name: ir361
+---
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+# Incident variance 2020-08-03
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+## Setup
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+library(oildata)
+library(tidyverse)
+library(stringr)
+library(tidytext)
+library(topicmodels)
+library(ldatuning)
+library(SnowballC)
+library(DT)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+head(incidents)
+```
+
+```{r}
+names <- unique(word(incidents$name, 1))
+names
+```
+
+```{r}
+df <- subset(incidents, on_offshore == "onshore" & commodity %in% c("rpp", "crude") & year >= 2002 & year < 2020)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Narratives: properties
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### NAs
+<!-- #endregion -->
+
+```{r}
+nrow(df)
+nrow(subset(df, is.na(narrative)))
+nrow(subset(df, significant == T))
+nrow(subset(df, significant == T & is.na(narrative)))
+```
+
+For significant incidents, lack of narrative is not too concerning
+
+```{r slideshow={'slide_type': 'subslide'}}
+df <- subset(df, !is.na(narrative))
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Cleanliness
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+head(select(df, incident_ID, narrative))
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+print(subset(df, incident_ID == 20020032)$narrative)
+```
+
+Quality seems ok.
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### How long are the narratives?
+<!-- #endregion -->
+
+```{r}
+table(round(str_length(df$narrative), -2))
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+df %>%
+    mutate(len = str_length(narrative)) %>%
+    ggplot(aes(x = len)) +
+        geom_histogram()
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+df %>%
+    filter(significant == T) %>%
+    mutate(len = str_length(narrative)) %>%
+    ggplot(aes(x = len)) +
+        geom_histogram()
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Do the narratives get longer over time?
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+df %>%
+    mutate(len = str_count(narrative, "\\S+")) %>%
+    filter(year >= 2002, year < 2020) %>%
+    ggplot(aes(x = factor(year), y = len)) + 
+        geom_boxplot(notch = T, outlier.shape = NA) + 
+        scale_y_continuous(limits=c(0, 350), oob=scales::rescale_none, breaks = seq(0, 350, 50))
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+df %>%
+    mutate(len = str_count(narrative, "\\S+")) %>%
+    filter(year >= 2002, year < 2020, significant == T) %>%
+    ggplot(aes(x = factor(year), y = len)) + 
+        geom_boxplot(notch = T, outlier.shape = NA) + 
+        scale_y_continuous(limits=c(0, 450), oob=scales::rescale_none, breaks = seq(0, 550, 50))
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Simple topic model
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Prepare
+<!-- #endregion -->
+
+```{r}
+narratives <- select(df, incident_ID, narrative)
+
+head(narratives, 3)
+```
+
+```{r}
+word_counts <- narratives %>%
+    unnest_tokens(word, narrative) %>%
+    anti_join(data.frame(word = str_to_lower(names)), by = "word") %>%
+    anti_join(stop_words, by = "word") %>%
+    filter(! str_detect(word, "^[0-9]")) %>%
+    mutate(word = wordStem(word)) %>%
+    count(incident_ID, word, sort = T) %>%
+    cast_dtm(document = incident_ID, term = word, 
+             value = n)
+word_counts
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+### Find number of topics
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+# results_1 <- FindTopicsNumber(word_counts, 
+#                               topics = c(5, 10, 20, 40), 
+#                               metrics = c("Griffiths2004", "CaoJuan2009", "Arun2010", "Deveaud2014"),
+#                               method = "Gibbs", 
+#                               control = list(seed = 532))
+# saveRDS(results_1, file = ".temp/results_1.rds")
+results_1 <- readRDS(".temp/results_1.rds")
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+FindTopicsNumber_plot(results_1)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+# results_2 <- FindTopicsNumber(word_counts, 
+#                             topics = c(15, 18, 19, 20, 21, 22, 25), 
+#                             metrics = c("Griffiths2004", "CaoJuan2009", "Arun2010", "Deveaud2014"),
+#                             method = "Gibbs", 
+#                             control = list(seed = 544))
+# saveRDS(results_2, file = ".temp/results_2.rds")
+results_2 <- readRDS(".temp/results_2.rds")
+```
+
+```{r}
+FindTopicsNumber_plot(results_2)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+# results_3 <- FindTopicsNumber(word_counts, 
+#                             topics = seq(15, 35), 
+#                             metrics = c("Griffiths2004", "CaoJuan2009", "Arun2010", "Deveaud2014"),
+#                             method = "Gibbs", 
+#                             control = list(seed = 912))
+# saveRDS(results_3, file = ".temp/results_3.rds")
+results_3 <- readRDS(".temp/results_3.rds")
+```
+
+```{r}
+FindTopicsNumber_plot(results_3)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+### Inspect model
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+# narratives_lda <- LDA(word_counts, method = "Gibbs", k = 25, control = list(seed = 912))
+# saveRDS(narratives_lda, ".temp/narratives_lda.rds")
+narratives_lda <- readRDS(".temp/narratives_lda.rds")
+narratives_lda
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+betas <- tidy(narratives_lda, matrix = "beta")
+head(betas)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+top_terms <- betas %>%
+    arrange(desc(beta)) %>%
+    group_by(topic) %>%
+    slice_head(n = 5) %>%
+    ungroup() %>%
+    arrange(topic, -beta)
+
+head(top_terms, 10)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+# datatable(top_terms, options = list(pageLength = 5))
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Look at terms and example for topics
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Setup
+<!-- #endregion -->
+
+```{r}
+gammas <- tidy(narratives_lda, matrix = "gamma")
+head(gammas)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+narratives <- select(df, incident_ID, narrative)
+narratives$incident_ID <- as.character(narratives$incident_ID)
+
+get_narrative <- function(topic) {
+    gammas %>%
+        filter(topic == {{topic}}) %>%
+        filter(gamma == max(gamma)) %>%
+        left_join(narratives, by = c("document" = "incident_ID")) %>%
+        {.$narrative}
+}
+
+get_terms <- function(topic) {
+    top_terms %>%
+        filter(topic == {{topic}}) %>%
+        mutate(term = reorder_within(term, beta, topic)) %>%
+        ggplot(aes(term, beta)) +
+            geom_bar(stat = "identity") +
+            scale_x_reordered()
+}
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+This is where we will store incident cause type topics.
+<!-- #endregion -->
+
+```{r}
+causes <- c()
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Topic 1
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+get_terms(topic = 1)
+```
+
+```{r}
+get_narrative(topic = 1)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+This is a good candidate for a narrative that describes incident causes.
+<!-- #endregion -->
+
+```{r}
+causes <- c(causes, 1)
+print(causes)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Topic 2
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+get_terms(2)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+get_narrative(2)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+This topic is more likely describing the emergency response.
+<!-- #endregion -->
+
+### Topic 3
+
+```{r slideshow={'slide_type': 'subslide'}}
+get_terms(3)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+get_narrative(3)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+This topic seems to capture contractor mistakes.
+<!-- #endregion -->
+
+```{r}
+causes <- c(causes, 3)
+causes
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Topic 4
+<!-- #endregion -->
+
+```{r}
+get_terms(4)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+get_narrative(4)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+This topic also seems to describe a response type.
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+### Topic 5
+<!-- #endregion -->
+
+```{r}
+get_terms(5)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+get_narrative(5)
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+Again, this seems to describe a failure type.
+<!-- #endregion -->
+
+```{r}
+causes <- c(causes, 5)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## See development of causes over time
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+df$incident_ID <- as.character(df$incident_ID)
+
+topic_by_year <- gammas %>%
+    left_join(select(df, incident_ID, year), by = c("document" = "incident_ID")) %>%
+    group_by(year, topic) %>%
+    summarize(gamma = sum(gamma) / n()) %>%
+    ungroup()
+head(topic_by_year)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+topic_development <- topic_by_year %>%
+    filter(topic %in% causes) %>%
+    ggplot(aes(x=year, y=gamma)) +
+        geom_line() +
+        geom_point() +
+#         geom_smooth(method = "lm") +
+        facet_wrap(~ topic) + 
+        scale_x_continuous(minor_breaks = seq(2002, 2019, 1)) + 
+        theme(panel.grid.major.x = element_line(color = "grey35", size = 0.6), 
+              panel.grid.minor.x = element_line(color = "grey35", size = 0.2))
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+topic_development
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Other
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+top_terms %>%
+    filter(topic == 1) %>%
+    mutate(term = reorder_within(term, beta, topic)) %>%
+    ggplot(aes(term, beta)) +
+        geom_bar(stat = "identity") +
+        scale_x_reordered()
+```
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+#### Check some narratives
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+set.seed(500)
+some_narratives <- sample(gammas$document, 9)
+some_narratives
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+gammas %>%
+    filter(document %in% some_narratives) %>%
+    ggplot(aes(x=topic, y=gamma)) +
+        facet_wrap(~ document) +
+        geom_bar(stat="identity")
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+df$incident_ID <- as.character(df$incident_ID)
+
+topic_by_year <- gammas %>%
+    left_join(select(df, incident_ID, year), by = c("document" = "incident_ID")) %>%
+    group_by(year, topic) %>%
+    summarize(gamma = sum(gamma) / n()) %>%
+    ungroup()
+head(topic_by_year)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+topic_by_year %>%
+    ggplot(aes(x=year, y=gamma)) +
+        geom_line() +
+        geom_point() +
+        geom_smooth(method = "lm") +
+        facet_wrap(~ topic)
+```
