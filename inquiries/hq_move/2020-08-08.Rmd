@@ -1,0 +1,81 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.1'
+      jupytext_version: 1.2.1
+  kernelspec:
+    display_name: R 3.6.1
+    language: R
+    name: ir361
+---
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+# Operator change of HQ
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+## Setup
+<!-- #endregion -->
+
+```{r}
+library(tidyverse)
+library(oildata)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+pipelines <- filter(pipelines, on_offshore == "onshore" & commodity %in% c("crude", "rpp"))
+head(pipelines)
+```
+
+<!-- #region {"slideshow": {"slide_type": "slide"}} -->
+## Change of HQ
+<!-- #endregion -->
+
+<!-- #region {"slideshow": {"slide_type": "subslide"}} -->
+We track change of HQ from one year to another. Particularly of interest are companies moving to Texas or Louisiana, which have particularly lax regulations.
+<!-- #endregion -->
+
+```{r slideshow={'slide_type': 'subslide'}}
+change_state <- function(df) {
+    brown_states <- c("TX", "LA")
+    df %>%
+        group_by(ID, commodity) %>%
+        arrange(desc(year)) %>%
+        mutate(move = state != lag(state)) %>%
+        mutate(move_tx_la = case_when(is.na(move) ~ NA, 
+                                      move & !(lag(state) %in% brown_states) & state %in% brown_states ~ TRUE, 
+                                      TRUE ~ FALSE)) %>%
+        mutate(moved_tx_la = move_tx_la | lag(move_tx_la) | lag(move_tx_la, 2))
+}
+
+pipelines <- change_state(pipelines)
+pipelines_ungrouped <- change_state(pipelines_ungrouped)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+head(select(pipelines_ungrouped, move, move_tx_la, everything()))
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+table(is.na(pipelines_ungrouped$move))
+```
+
+```{r}
+table(pipelines_ungrouped$move_tx_la)
+```
+
+```{r slideshow={'slide_type': 'subslide'}}
+get_volume <- pipelines_ungrouped %>%
+    group_by(ID, commodity) %>%
+    filter(TRUE %in% move_tx_la) %>%
+    arrange(year) %>%
+    mutate(prev_spill = sum(lag(incidents_volume), lag(incidents_volume, 2), lag(incidents_volume, 3), na.rm = T), 
+           future_spill = sum(incidents_volume, lead(incidents_volume), lead(incidents_volume, 2), na.rm = T)) %>%
+    filter(move_tx_la)
+sum(get_volume$prev_spill)
+sum(get_volume$future_spill)
+```
